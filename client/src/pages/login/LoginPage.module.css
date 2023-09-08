@@ -1,0 +1,33 @@
+.container{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.wrapper{
+    width: 70%;
+    height: 80%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #DDE8FE;
+    border-radius: 3px;
+}   
+.form{
+    width: 40%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.img{
+    width: 60%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.imageFit{
+    width: 100%;
+}
