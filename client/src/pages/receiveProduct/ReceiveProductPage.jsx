@@ -57,12 +57,10 @@ const ReceiveProductPage = () => {
     const productId = String(receiveProduct.product_id);
     const userId = String(receiveProduct.user_id);
     const supplierId = String(receiveProduct.supplier_id);
-    const date = String(receiveProduct.created_date);
     return(
       productId.toLowerCase().includes(searchQuery.toLowerCase()) ||
       userId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      supplierId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      date.toLowerCase().includes(searchQuery.toLowerCase()) 
+      supplierId.toLowerCase().includes(searchQuery.toLowerCase())
     )
       
   });

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Input, Upload, Space, Select, Spin, InputNumber } from 'antd';
+import { Button, Modal, Input, Upload, Space, Select, Spin, Radio } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import NumericInput from '../usefull/NumericInput';
 import NumericInputFloat from '../usefull/NumbericInputFloat';
@@ -89,7 +89,13 @@ const ProuductAddModal = ({
                                     />
                                 </label>
                             </Space>
-
+                            <Radio.Group
+                                value={formAdd.cashType}
+                                onChange={e => setFormAdd({ ...formAdd, cashType: e.target.value })}
+                            >
+                                <Radio value={'riel'}>លុយរៀល</Radio>
+                                <Radio value={'dollar'}>លុយដុល្លា</Radio>
+                            </Radio.Group>
                             <Space>
                                 <label><span style={{ color: "blue" }}>*តម្លៃទិញចូលក្នុងមួយដំ </span>
                                     <NumericInputFloat

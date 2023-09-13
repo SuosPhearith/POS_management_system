@@ -18,24 +18,13 @@ import { BiSolidCategoryAlt } from "react-icons/bi";
 import { FaTruck } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import { Button, Dropdown } from 'antd';
-import localhostStorageClear from '../../utils/LocalStorageClear';
-import axiosInstance from '../../services/request';
-import errroHandler from '../../utils/ErrorHandler';
+import logout from '../../utils/Logout';
 
 const Layout = ({ children }) => {
   const [toggle, setToggle] = useState(false);
   const fullname = localStorage.getItem('fullname');
   const username = localStorage.getItem('username');
   const role = localStorage.getItem('role');
-  const handleLogout = async () => {
-    try {
-      await axiosInstance("POST", "users/logout", {username : username});
-      localhostStorageClear();
-      window.location.href = '/login';
-    } catch (error) {
-      errroHandler(error);
-    }
-  }
   const menuUser = [
     {
       key: '1',
@@ -72,7 +61,7 @@ const Layout = ({ children }) => {
         </div>
       ),
       icon: <BiSolidLogOut style={{ fontSize: "18px" }} />,
-      onClick: handleLogout,
+      onClick: ()=>logout(),
     },
   ];
   return (

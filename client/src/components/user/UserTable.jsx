@@ -57,7 +57,7 @@ const UserTable = ({ users, handleUpdate, handleDelete, handleChangePassword }) 
       title: 'ថ្ងៃកែចុងក្រោយ',
       dataIndex: 'updated_date',
       key: 'updated_date',
-      width : "12%",
+      width : "11%",
       render: (item) => {
         return (
           dateConverter(item)
@@ -68,7 +68,7 @@ const UserTable = ({ users, handleUpdate, handleDelete, handleChangePassword }) 
       title: 'ថ្ងៃបង្កើត',
       dataIndex: 'created_date',
       key: 'created_date',
-      width : "12%",
+      width : "11%",
       render: (item) => {
         return (
           dateConverter(item)
@@ -93,6 +93,7 @@ const UserTable = ({ users, handleUpdate, handleDelete, handleChangePassword }) 
       title: 'សកម្មភាព',
       dataIndex: 'action',
       key: 'action',
+      width : "12%",
       render: (value, record) => (
         <Space>
           <Popconfirm
@@ -105,7 +106,7 @@ const UserTable = ({ users, handleUpdate, handleDelete, handleChangePassword }) 
             <Button danger><DeleteFilled /></Button>
           </Popconfirm>
           <Button type='primary'
-            onClick={() => handleUpdate(record.id, record.fullname, record.username, record.password, record.contact, record.role_id, record.image)}
+            onClick={() => handleUpdate(record.id, record.fullname, record.username, record.contact, record.role_id, record.image)}
           >
             <EditFilled />
           </Button>

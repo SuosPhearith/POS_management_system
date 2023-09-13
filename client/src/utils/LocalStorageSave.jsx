@@ -11,8 +11,9 @@ const roleConverter = (role) =>{
     }
 }
 
-const localhostStorageSave = (token, id,  username, fullname, role) =>{
-    localStorage.setItem('token', token);
+const localhostStorageSave = (access_token, refresh_token,  id,  username, fullname, role) =>{
+    localStorage.setItem('access_token', access_token);
+    localStorage.setItem('refresh_token', refresh_token);
     localStorage.setItem('id', id);
     localStorage.setItem('username', username);
     localStorage.setItem('fullname', fullname);

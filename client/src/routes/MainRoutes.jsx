@@ -18,7 +18,7 @@ import SupplierPage from '../pages/supplier/SupplierPage';
 import CategoryPage from '../pages/category/CategoryPage';
 import ReceiveProductPage from '../pages/receiveProduct/ReceiveProductPage';
 function MainRoute() {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('access_token');
   const role = localStorage.getItem('role');
   return (
     <BrowserRouter>

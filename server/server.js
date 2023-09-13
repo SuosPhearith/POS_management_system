@@ -14,6 +14,9 @@ app.use('/api/categories', require('./src/routes/categoryRoute'));
 app.use('/api/suppliers', require('./src/routes/supplierRoute'));
 app.use('/api/receiveproducts', require('./src/routes/receiveproductRoute'));
 app.use('/api/products', require('./src/routes/productRoute'));
+app.use('/api/sales', require('./src/routes/saleRoute'));
+app.use('/api/paymentTypes', require('./src/routes/paymentTypesRoute'));
+app.use('/api/auth' , require('./src/routes/authRoute'));
 
 
 

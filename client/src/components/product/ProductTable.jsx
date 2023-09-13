@@ -71,6 +71,17 @@ const CategoryTable = ({ categories, handleUpdate, handleDelete, handleAdd }) =>
             width: 150,
         },
         {
+            title: 'ប្រភេទប្រាក់',
+            dataIndex: 'cashType',
+            key: 'cashtype',
+            width: 150,
+            render: (item => {
+                return (
+                    <>{item === 'riel'?'រៀល':"ដុល្លា"}</>
+                )
+            })
+        },
+        {
             title: 'តម្លៃទិញចូល',
             dataIndex: 'purchase_price',
             key: 'purchase_price',
@@ -174,6 +185,7 @@ const CategoryTable = ({ categories, handleUpdate, handleDelete, handleAdd }) =>
                             record.unit_code,
                             record.name,
                             record.category_id,
+                            record.cashType,
                             record.purchase_price,
                             record.product_price,
                             record.unit_price,
@@ -190,6 +202,7 @@ const CategoryTable = ({ categories, handleUpdate, handleDelete, handleAdd }) =>
                         onClick={() => handleAdd(
                             record.id,
                             record.name,
+                            record.cashType,
                             record.purchase_price,
                             record.product_price,
                             record.unit_price,

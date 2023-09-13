@@ -19,6 +19,7 @@ const ProductPage = () => {
     order_quantity: "",
     category_id: null,
     unit_quantity: "",
+    cashType: "",
     purchase_price: "",
     product_price: "",
     unit_price: "",
@@ -44,6 +45,7 @@ const ProductPage = () => {
   const productAddForm = {
     id: "",
     name: "",
+    cashType: "",
     purchase_price: "",
     product_price: "",
     unit_price: "",
@@ -120,6 +122,7 @@ const ProductPage = () => {
       productData.append("order_quantity", form.order_quantity);
       productData.append("category_id", form.category_id);
       productData.append("unit_quantity", form.unit_quantity);
+      productData.append("cashType", form.cashType);
       productData.append("purchase_price", form.purchase_price);
       productData.append("product_price", form.product_price);
       productData.append("unit_price", form.unit_price);
@@ -150,6 +153,7 @@ const ProductPage = () => {
       productData.append("unit_code", form.unit_code);
       productData.append("name", form.name);
       productData.append("category_id", form.category_id);
+      productData.append("cashType", form.cashType);
       productData.append("purchase_price", form.purchase_price);
       productData.append("product_price", form.product_price);
       productData.append("unit_price", form.unit_price);
@@ -176,6 +180,7 @@ const ProductPage = () => {
     unit_code,
     name,
     category_id,
+    cashType,
     purchase_price,
     product_price,
     unit_price,
@@ -192,6 +197,7 @@ const ProductPage = () => {
         unit_code: unit_code,
         name: name,
         category_id: category_id,
+        cashType: cashType,
         purchase_price: purchase_price,
         product_price: product_price,
         unit_price: unit_price,
@@ -234,6 +240,7 @@ const ProductPage = () => {
         purchase_price: formAdd.purchase_price,
         product_price: formAdd.product_price,
         unit_price: formAdd.unit_price,
+        cashType: formAdd.cashType,
         special_price: formAdd.special_price,
         order_quantity: formAdd.order_quantity,
         supplier_id: formAdd.supplier_id,
@@ -251,11 +258,12 @@ const ProductPage = () => {
   }
 
   // Handle add product
-  const handleAdd = (id, name, purchase_price, product_price, unit_price, special_price) => {
+  const handleAdd = (id, name, cashType, purchase_price, product_price, unit_price, special_price) => {
     setFormAdd(
       {
         id,
         name,
+        cashType,
         purchase_price,
         product_price,
         unit_price,
@@ -297,6 +305,7 @@ const ProductPage = () => {
       order_quantity: "",
       category_id: null,
       unit_quantity: "",
+      cashType: "",
       purchase_price: "",
       product_price: "",
       unit_price: "",
@@ -316,6 +325,7 @@ const ProductPage = () => {
       {
         id: "",
         name: "",
+        cashType: "",
         purchase_price: "",
         product_price: "",
         unit_price: "",
@@ -390,6 +400,10 @@ const ProductPage = () => {
         return true;
       }
     }
+    if (form.cashType === "") {
+      message.error("សូមបញ្ជូលប្រភេទប្រាក់!");
+      return true;
+    }
     if (form.purchase_price === "") {
       message.error("សូមបញ្ជូលតម្លៃទិញចូលក្នុងមួយដំ!");
       return true;
@@ -417,6 +431,10 @@ const ProductPage = () => {
   const validateAdd = () => {
     if (formAdd.name === "" || formAdd.name < 3) {
       message.error("សូមបញ្ជូលឈ្មោះលើសពី៣អក្សរ!");
+      return true;
+    }
+    if (formAdd.cashType === "") {
+      message.error("សូមបញ្ជូលប្រភេទប្រាក់!");
       return true;
     }
     if (id === "") {

@@ -14,13 +14,14 @@ const LoginPage = () => {
         username: values.username,
         password: values.password
       }
-      const response = await request("POST", "users/login", data);
-      const iToken = response.token;
-      const token = tokenConverter(iToken);
+      const response = await request("POST", "auth/login", data);
+      const access_token = response.access_token;
+      const refresh_token = response.refresh_token;
+      const token = tokenConverter(access_token);
       if (token === false) {
         return message.error("Can not get token!");
       }
-      localhostStorageSave(iToken, token.id, token.username, token.fullname, token.role_id)
+      localhostStorageSave(access_token, refresh_token, token.id, token.username, token.fullname, token.role_id);
       message.success("Login successfully!");
       window.location.href = "/";
     } catch (error) {

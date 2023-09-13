@@ -6,8 +6,6 @@ const {
     userDelete,
     userRegister,
     userUpdate,
-    userLogin,
-    userLogout,
     getListProfile,
     resetPassword
 } = require('../controllers/userController')
@@ -30,10 +28,6 @@ router.put("/update/:id",authenticateToken([roles.admin]), upload.single('file')
 router.put("/resetPassword/:id",authenticateToken([roles.admin]), resetPassword)
 
 router.delete("/delete/:id",authenticateToken([roles.admin]),userDelete)
-
-router.post("/logout",authenticateToken([roles.admin,roles.seller,roles.manager]),userLogout)
-
-router.post("/login",userLogin)
 
 
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Input, Upload, Space, Select, Spin, InputNumber } from 'antd';
+import { Button, Modal, Input, Upload, Space, Select, Spin, Radio } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import NumericInput from '../usefull/NumericInput';
 import NumericInputFloat from '../usefull/NumbericInputFloat';
@@ -74,10 +74,10 @@ const ProuductModal = ({
         }
     };
     const handleSelectChangeCategory = (value) => {
-        setForm({...form, category_id:value});
+        setForm({ ...form, category_id: value });
     };
     const handleSelectChangeSupplier = (value) => {
-        setForm({...form, supplier_id:value});
+        setForm({ ...form, supplier_id: value });
     };
     const findLabel = () => {
         const valueToFind = String(form.category_id);
@@ -86,22 +86,22 @@ const ProuductModal = ({
     };
     const productForm = {
         id: "",
-        box_code:"",
-        unit_code:"",
-        name:"",
-        order_quantity:"",
-        category_id:"",
-        unit_quantity:"",
-        purchase_price:"",
-        product_price:"",
-        unit_price:"",
-        special_price:"",
-        discount_per:"",
-        reorder_level:"",
-        description:"",
-        file:"",
-        supplier_id : "",
-      };
+        box_code: "",
+        unit_code: "",
+        name: "",
+        order_quantity: "",
+        category_id: "",
+        unit_quantity: "",
+        purchase_price: "",
+        product_price: "",
+        unit_price: "",
+        special_price: "",
+        discount_per: "",
+        reorder_level: "",
+        description: "",
+        file: "",
+        supplier_id: "",
+    };
     return (
         <>
             <Spin spinning={loading}>
@@ -158,38 +158,45 @@ const ProuductModal = ({
                                 {
                                     form.id === "" &&
                                     <Select
-                                    value={form.supplier_id}
-                                    onChange={handleSelectChangeSupplier}
-                                    showSearch
-                                    style={selectStyle}
-                                    placeholder="ជ្រើសរើសអ្នកនាំចូល"
-                                    optionFilterProp="children"
-                                    filterOption={(input, option) => (option?.label ?? '').includes(input)}
-                                    filterSort={(optionA, optionB) =>
-                                        (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                                    }
-                                    options={suppliers}
-                                /> 
+                                        value={form.supplier_id}
+                                        onChange={handleSelectChangeSupplier}
+                                        showSearch
+                                        style={selectStyle}
+                                        placeholder="ជ្រើសរើសអ្នកនាំចូល"
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                                        filterSort={(optionA, optionB) =>
+                                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                                        }
+                                        options={suppliers}
+                                    />
                                 }
                             </Space>
+                            <Radio.Group
+                                value={form.cashType}
+                                onChange={e => setForm({ ...form, cashType: e.target.value })}
+                            >
+                                <Radio value={'riel'}>លុយរៀល</Radio>
+                                <Radio value={'dollar'}>លុយដុល្លា</Radio>
+                            </Radio.Group>
                             <Space>
                                 {
                                     form.id === "" &&
                                     <>
-                                    <NumericInput
-                                    value={form.order_quantity}
-                                    onChange={e => setForm({ ...form, order_quantity: e.target.value })}
-                                    onPressEnter={handleKeyPress}
-                                    style={inputStyle}
-                                    placeholder="ចំនួនទិញចូលដំ"
-                                />
-                                <NumericInput
-                                    value={form.unit_quantity}
-                                    onChange={e => setForm({ ...form, unit_quantity: e.target.value })}
-                                    onPressEnter={handleKeyPress}
-                                    style={inputStyle}
-                                    placeholder="ចំនួនទំនិញក្នុងមួយដំ"
-                                />
+                                        <NumericInput
+                                            value={form.order_quantity}
+                                            onChange={e => setForm({ ...form, order_quantity: e.target.value })}
+                                            onPressEnter={handleKeyPress}
+                                            style={inputStyle}
+                                            placeholder="ចំនួនទិញចូលដំ"
+                                        />
+                                        <NumericInput
+                                            value={form.unit_quantity}
+                                            onChange={e => setForm({ ...form, unit_quantity: e.target.value })}
+                                            onPressEnter={handleKeyPress}
+                                            style={inputStyle}
+                                            placeholder="ចំនួនទំនិញក្នុងមួយដំ"
+                                        />
                                     </>
                                 }
                                 <NumericInputFloat

@@ -7,11 +7,19 @@ const createProduct = asyncHandler(async (req, res, next) => {
 
     const connection = await db.pool.getConnection();
     try {
-        const { box_code, unit_code, name, order_quantity, category_id, unit_quantity, purchase_price, product_price, unit_price, special_price, discount_per, reorder_level, description, supplier_id, user_id } = req.body;
+        const { box_code, unit_code, name, order_quantity, category_id, unit_quantity, cashType, purchase_price, product_price, unit_price, special_price, discount_per, reorder_level, description, supplier_id, user_id } = req.body;
         const file = req.file;
         let image = null;
         if(file){
             image = file.filename;
+        }
+        if(!cashType){
+            res.status(400);
+            throw new Error("Please input cash type");
+        }
+        if(cashType !== 'riel' && cashType !== "dollar"){
+            res.status(400);
+            throw new Error("cash type not match");
         }
         if (!supplier_id) {
             res.status(400);
@@ -71,10 +79,10 @@ const createProduct = asyncHandler(async (req, res, next) => {
         await connection.beginTransaction();
         // Insert into table products
         const queryCreateProduct = "insert into products (box_code, unit_code, name, order_quantity, quantity, category_id, unit_quantity"
-            + ", purchase_price, product_price, unit_price, special_price, discount_per, reorder_level, description, image, user_id)"
-            + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            + ", cashType, purchase_price, product_price, unit_price, special_price, discount_per, reorder_level, description, image, user_id)"
+            + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         const quantity = order_quantity * unit_quantity;
-        const valuesProduct = [box_code, unit_code, name, order_quantity, quantity, category_id, unit_quantity, purchase_price, product_price, unit_price, special_price, discount_per, reorder_level, description, image, user_id];
+        const valuesProduct = [box_code, unit_code, name, order_quantity, quantity, category_id, unit_quantity, cashType, purchase_price, product_price, unit_price, special_price, discount_per, reorder_level, description, image, user_id];
         const [productResult] = await connection.query(queryCreateProduct, valuesProduct);
         // Retrieve the auto-generated product_id
         const product_id = productResult.insertId;
@@ -103,7 +111,7 @@ const createProduct = asyncHandler(async (req, res, next) => {
 
 const getListProduct = asyncHandler(async (req, res, next) => {
     try {
-        const queryGetList = "select p.id, p.box_code, p.unit_code, p.name, p.order_quantity, p.quantity, c.name as category_name, p.category_id, p.unit_quantity, p.purchase_price, p.product_price, p.unit_price, p.special_price,p.discount_per, p.description, p.image, p.created_date, p.updated_date, p.user_id from products as p inner join categories as c on p.category_id = c.id";
+        const queryGetList = "select p.id, p.box_code, p.unit_code, p.name, p.order_quantity, p.quantity, c.name as category_name, p.category_id, p.unit_quantity, p.cashType, p.purchase_price, p.product_price, p.unit_price, p.special_price,p.discount_per, p.description, p.image, p.created_date, p.updated_date, p.user_id from products as p inner join categories as c on p.category_id = c.id";
         const getList = await executeQuery(queryGetList);
         res.json({
             products: getList
@@ -116,7 +124,7 @@ const getListProduct = asyncHandler(async (req, res, next) => {
 const updateProduct = asyncHandler(async (req, res, next) => {
     try {
         const id = req.params.id;
-        const { box_code, unit_code, name, category_id, purchase_price, product_price, unit_price, special_price, discount_per, reorder_level, description, user_id } = req.body;
+        const { box_code, unit_code, name, category_id, cashType, purchase_price, product_price, unit_price, special_price, discount_per, reorder_level, description, user_id } = req.body;
         const file = req.file;
         let image = null;
         if(file){
@@ -128,6 +136,14 @@ const updateProduct = asyncHandler(async (req, res, next) => {
             if (result.length > 0) {
                 image = result[0].image;
             }
+        }
+        if(!cashType){
+            res.status(400);
+            throw new Error("Please input cash type");
+        }
+        if(cashType !== 'riel' && cashType !== "dollar"){
+            res.status(400);
+            throw new Error("cash type not match");
         }
         if (!user_id) {
             res.status(400);
@@ -170,10 +186,10 @@ const updateProduct = asyncHandler(async (req, res, next) => {
             res.status(400);
             throw new Error("Name is already exist!");
         }
-        const queryUpdate = "update products set  box_code = ?, unit_code = ?, name = ?, category_id = ?,"
+        const queryUpdate = "update products set  box_code = ?, unit_code = ?, name = ?, category_id = ?, cashType= ?,"
             + " purchase_price = ?, product_price = ?, unit_price = ?, special_price = ?, discount_per = ?, reorder_level = ?,"
             + " description = ?, image = ?, updated_date = ?, user_id = ? where id = ?";
-        const values = [box_code, unit_code, name, category_id, purchase_price, product_price, unit_price, special_price,
+        const values = [box_code, unit_code, name, category_id, cashType, purchase_price, product_price, unit_price, special_price,
             discount_per, reorder_level, description, image, currentDate, user_id, id];
 
         const update = await executeQuery(queryUpdate, values);
@@ -215,7 +231,16 @@ const addStock = asyncHandler(async (req, res, next) => {
     const connection = await db.pool.getConnection();
     try {
         const id = req.params.id;
-        const {order_quantity,purchase_price, unit_price, product_price, special_price, supplier_id, user_id} = req.body;
+        const {order_quantity, cashType, purchase_price, unit_price, product_price, special_price, supplier_id, user_id} = req.body;
+        
+        if (!cashType) {
+            res.status(400);
+            throw new Error("Please input cash type");
+        }
+        if(cashType !== 'riel' && cashType !== "dollar"){
+            res.status(400);
+            throw new Error("cash type not match");
+        }
         if (!supplier_id) {
             res.status(400);
             throw new Error("Please input supplier_id");
@@ -256,8 +281,8 @@ const addStock = asyncHandler(async (req, res, next) => {
         
         await connection.beginTransaction();
 
-        const valuesUpdate = [ new_order_quantity, new_quantity, purchase_price, unit_price, product_price, special_price, currentDate, user_id, id];
-        const queryUpate = "update products set order_quantity = ?, quantity = ?, purchase_price = ?, unit_price = ?, product_price = ?, special_price = ?, updated_date = ?, user_id = ? where id = ?";
+        const valuesUpdate = [ new_order_quantity, new_quantity,cashType, purchase_price, unit_price, product_price, special_price, currentDate, user_id, id];
+        const queryUpate = "update products set order_quantity = ?, quantity = ?, cashType = ?, purchase_price = ?, unit_price = ?, product_price = ?, special_price = ?, updated_date = ?, user_id = ? where id = ?";
         await connection.query(queryUpate,valuesUpdate);
 
         const queryCreateRecieveProduct = "insert into receiveproducts (product_id, quantity, purchase_price, unit_price, product_price, special_price, sub_total, supplier_id, user_id) values (?,?,?,?,?,?,?,?,?)";

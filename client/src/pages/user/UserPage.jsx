@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import UserTable from '../../components/user/UserTable';
 import style from './UserPage.module.css';
 import Search from '../../components/search/Search';
-import { Button, message } from 'antd';
+import { Button, Form, message } from 'antd';
 import request from '../../services/request';
 import errroHandler from '../../utils/ErrorHandler';
 import { Spin } from 'antd';
@@ -72,17 +72,17 @@ const UserPage = () => {
     }
   }
   // Update function
-  const UpdateUser = async (id = "", fullname = "", username = "", password = "", contact = "", role = "", file = null) => {
+  const UpdateUser = async () => {
     if (validationError()) return;
     try {
       setLoading(true);
       let formData = new FormData();
       formData.append("fullname", fullname);
       formData.append("username", username);
-      formData.append("password", password);
       formData.append("contact", contact);
       formData.append("role", role);
       formData.append("file", file);
+      console.log(formData);
       const response = await request("PUT", `users/update/${id}`, formData);
       message.success(response.message);
       handleClear();
@@ -159,8 +159,9 @@ const UserPage = () => {
     deleteUser(id);
   }
   // Handle update user
-  const handleUpdate = (id, fullname, username, password, contact, role, file) => {
+  const handleUpdate = (id, fullname, username, contact, role, file) => {
     setIsModalOpen(true);
+    const password = "";
     generateInitialData(id, fullname, username, password, contact, role, file);
   }
   // Handle insert user
@@ -186,7 +187,7 @@ const UserPage = () => {
     if (id === null || id === "") {
       handleInsert();
     } else {
-      UpdateUser(id, fullname, username, password, contact, role, file);
+      UpdateUser();
     }
   }
   // handle submit reset and change password
@@ -229,10 +230,6 @@ const UserPage = () => {
       message.error("សូមបញ្ជុលគណនី!");
       return true;
     }
-    if (password === "") {
-      message.error("សូមបញ្ជុលពាក្យសម្ងាត់!");
-      return true;
-    }
     if (contact === "") {
       message.error("សូមបញ្ជុលទំនាក់ទំនង!");
       return true;
@@ -252,6 +249,10 @@ const UserPage = () => {
     if (!id) {
       if (password.length < 3 || password.length > 15) {
         message.error("សូមបញ្ជុលពាក្យសម្ងាត់ចន្លោះ ៣ ទៅ ១៥ អក្សរ!");
+        return true;
+      }
+      if (password === "") {
+        message.error("សូមបញ្ជុលពាក្យសម្ងាត់!");
         return true;
       }
     }

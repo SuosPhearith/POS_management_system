@@ -113,7 +113,7 @@ const userRegister = asyncHandler(async (req, res, next) => {
 const userUpdate = asyncHandler(async (req, res, next) => {
     try {
         const id = req.params.id;
-        const { fullname, username, password, contact } = req.body;
+        const { fullname, username, contact } = req.body;
         let role = req.body.role;
         const file = req.file;
         let image = null;
@@ -136,7 +136,7 @@ const userUpdate = asyncHandler(async (req, res, next) => {
             res.status(400);
             throw new Error("Username not found!");
         }
-        if (!fullname || !username || !password || !contact || !role) {
+        if (!fullname || !username || !contact || !role) {
             res.status(400);
             throw new Error("All fields are require!");
         }
@@ -148,19 +148,14 @@ const userUpdate = asyncHandler(async (req, res, next) => {
             res.status(400);
             throw new Error("Username is too short!");
         }
-        if (password.length < 3) {
-            res.status(400);
-            throw new Error("Password is too short!");
-        }
         const queryCheckUsername = "SELECT id FROM users WHERE username = ? AND id != ?";
         const existingUser = await executeQuery(queryCheckUsername, [username, id]);
         if (existingUser.length > 0) {
             res.status(409);
             throw new Error("Username is already taken by another user");
         }
-        const hashPassword = await bcrypt.hash(password, 10);
-        const queryUpdate = "update users set username = ?, password = ?, fullname = ?, contact = ?, role_id = ?, image = ?, updated_date = ? where id = ?";
-        const values = [username, hashPassword, fullname, contact, role, image, currentDate, id];
+        const queryUpdate = "update users set username = ?, fullname = ?, contact = ?, role_id = ?, image = ?, updated_date = ? where id = ?";
+        const values = [username, fullname, contact, role, image, currentDate, id];
         const update = await executeQuery(queryUpdate, values);
         if (update.affectedRows === 1) {
             res.json({
@@ -207,69 +202,6 @@ const userDelete = asyncHandler(async (req, res, next) => {
         next(error);
     }
 })
-
-const userLogin = asyncHandler(async (req, res, next) => {
-    try {
-        const { username, password } = req.body;
-        const querycheck = "select * from users where username = ?";
-        const user = await executeQuery(querycheck, [username]);
-        if (user.length === 0) {
-            res.status(400);
-            throw new Error("Username does not exist!");
-        }
-        const queryOnlyOne = "select * from users where username = ? and is_active = 1";
-        const checkOnlyOne = await executeQuery(queryOnlyOne, [username]);
-        if (checkOnlyOne.length > 0) {
-            res.status(400);
-            throw new Error("Accuont can loggin only once device!");
-        }
-        const isCorrect = await bcrypt.compare(password, user[0].password);
-        if (!isCorrect) {
-            res.status(400);
-            throw new Error("Incorrect password!");
-        }
-
-        const queryActive = "update users set is_active = 1 where username = ?";
-        await executeQuery(queryActive, [username]);
-        delete user[0].password;
-
-        jwt.sign(user[0], process.env.JWT_SECRET_KEY, (err, token) => {
-            if (err) {
-                res.status(500);
-            }
-            res.json({
-                token: token
-            })
-        })
-
-    } catch (error) {
-        next(error);
-    }
-})
-
-const userLogout = asyncHandler(async (req, res, next) => {
-    try {
-        const username = req.body.username;
-        if (!username) {
-            res.status(400);
-            throw new Error("Can not found username for logout!");
-        }
-        const querycheck = "select * from users where username = ? and is_active = 1";
-        const user = await executeQuery(querycheck, [username]);
-        if (user.length === 0) {
-            res.status(400);
-            throw new Error("Please login account first!");
-        }
-        const queryLogout = "update users set is_active = 0 where username = ?";
-        await executeQuery(queryLogout, [username]);
-        res.json({
-            message: "Loggout successfully!"
-        })
-    } catch (error) {
-        next(error);
-    }
-})
-
 // description getlist user
 // route "/api/users/profile"
 // public
@@ -329,8 +261,6 @@ module.exports = {
     userDelete,
     userRegister,
     userUpdate,
-    userLogin,
-    userLogout,
     getListProfile,
     resetPassword
 }
