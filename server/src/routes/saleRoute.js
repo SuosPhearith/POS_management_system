@@ -9,6 +9,7 @@ router.route("/getList").get(sale.getList);
 router.route("/getList/:id").get(sale.getListDetail);
 router.route("/getListDebt").get(sale.getListDebt);
 router.route("/getListDebtLate").get(sale.getListDebtLate);
+router.route("/getListPayall").get(sale.getListPayall);
 router.route("/create").post(sale.create);
 router.route("/update/:id").put(sale.update);
 router.route("/payback/:id").put(sale.payBack);

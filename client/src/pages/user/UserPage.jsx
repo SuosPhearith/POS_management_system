@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import UserTable from '../../components/user/UserTable';
-import style from './UserPage.module.css';
-import Search from '../../components/search/Search';
-import { Button, Form, message } from 'antd';
-import request from '../../services/request';
-import errroHandler from '../../utils/ErrorHandler';
-import { Spin } from 'antd';
-import ModalUser from '../../components/user/ModalUser';
-import ChanagePassForm from '../../components/user/ChanagePassForm';
+import React, { useEffect, useState } from "react";
+import UserTable from "../../components/user/UserTable";
+import style from "./UserPage.module.css";
+import Search from "../../components/search/Search";
+import { Button, message } from "antd";
+import request from "../../services/request";
+import errroHandler from "../../utils/ErrorHandler";
+import { Spin } from "antd";
+import ModalUser from "../../components/user/ModalUser";
+import ChanagePassForm from "../../components/user/ChanagePassForm";
 const UserPage = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,10 +32,10 @@ const UserPage = () => {
     setId("");
     setConfirmPassword("");
     setIsModalOpen(false);
-  }
+  };
   useEffect(() => {
     getUsers();
-  }, [])
+  }, []);
   // Get list all users
   const getUsers = async () => {
     try {
@@ -47,10 +47,17 @@ const UserPage = () => {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   // Insert function
-  const insertUser = async (fullname = "", username = "", password = "", contact = "", role = "", file = null) => {
+  const insertUser = async (
+    fullname = "",
+    username = "",
+    password = "",
+    contact = "",
+    role = "",
+    file = null
+  ) => {
     if (validationError()) return;
     try {
       setLoading(true);
@@ -70,7 +77,7 @@ const UserPage = () => {
     } finally {
       setLoading(false);
     }
-  }
+  };
   // Update function
   const UpdateUser = async () => {
     if (validationError()) return;
@@ -92,10 +99,10 @@ const UserPage = () => {
     } finally {
       setLoading(false);
     }
-  }
+  };
   // Delete function
   const deleteUser = async (id = "") => {
-    if(!id){
+    if (!id) {
       return message.error("មិនមានID!!");
     }
     try {
@@ -109,10 +116,10 @@ const UserPage = () => {
     } finally {
       setLoading(false);
     }
-  }
+  };
   // validate change password
-  const validateChangePassword = () =>{
-    if(!id){
+  const validateChangePassword = () => {
+    if (!id) {
       message.error("មិនមានID!!");
       return true;
     }
@@ -129,17 +136,21 @@ const UserPage = () => {
       return true;
     }
     return false;
-  }
+  };
   // Change password function
-  const changePassword = async (id = "", password = "", confirmPassword = "") => {
-    if(validateChangePassword()) return;
+  const changePassword = async (
+    id = "",
+    password = "",
+    confirmPassword = ""
+  ) => {
+    if (validateChangePassword()) return;
     try {
       setLoading(true);
       const data = {
         password: password,
-        confirmPassword: confirmPassword
-      }
-      const response = await request("PUT", `users/resetPassword/${id}`, data)
+        confirmPassword: confirmPassword,
+      };
+      const response = await request("PUT", `users/resetPassword/${id}`, data);
       message.success(response.message);
       handleCancelFormChangePassword();
       getUsers();
@@ -148,22 +159,22 @@ const UserPage = () => {
     } finally {
       setLoading(false);
     }
-  }
+  };
   // Handle change password
   const handleChangePassword = (id) => {
     setIsFormOpen(true);
     setId(id);
-  }
+  };
   // Handle delete user
   const handleDelete = (id) => {
     deleteUser(id);
-  }
+  };
   // Handle update user
   const handleUpdate = (id, fullname, username, contact, role, file) => {
     setIsModalOpen(true);
     const password = "";
     generateInitialData(id, fullname, username, password, contact, role, file);
-  }
+  };
   // Handle insert user
   const handleInsert = async () => {
     insertUser(fullname, username, password, contact, role, file);
@@ -171,8 +182,16 @@ const UserPage = () => {
   const handleCancelForm = () => {
     setIsModalOpen(false);
     handleClear();
-  }
-  const generateInitialData = (id, fullname, username, password, contact, role, file) => {
+  };
+  const generateInitialData = (
+    id,
+    fullname,
+    username,
+    password,
+    contact,
+    role,
+    file
+  ) => {
     setId(id);
     setFullname(fullname);
     setUsername(username);
@@ -180,7 +199,7 @@ const UserPage = () => {
     setContact(contact);
     setRole(role);
     setFile(file);
-  }
+  };
 
   // Handle submit insert and updata
   const handleSubmit = () => {
@@ -189,35 +208,33 @@ const UserPage = () => {
     } else {
       UpdateUser();
     }
-  }
+  };
   // handle submit reset and change password
   const submitChangePassword = () => {
     changePassword(id, password, confirmPassword);
-  }
-
+  };
 
   // Handle search query change
   const handleSearch = (e) => {
     const { value } = e.target;
     setSearchQuery(value);
-  }
+  };
 
   // Filter users based on search query
-  const filteredUsers = users.filter(user => {
+  const filteredUsers = users.filter((user) => {
     const userId = String(user.id);
-    return(
+    return (
       user.fullname.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.contact.toLowerCase().includes(searchQuery.toLowerCase()) ||
       userId.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  }
-  );
+    );
+  });
 
   const handleCancelFormChangePassword = () => {
     setIsFormOpen(false);
     handleClear();
-  }
+  };
 
   // validation
 
@@ -258,7 +275,7 @@ const UserPage = () => {
     }
 
     return false;
-  }
+  };
 
   return (
     <Spin spinning={loading}>
@@ -269,11 +286,22 @@ const UserPage = () => {
             <Search searchQuery={searchQuery} handleSearch={handleSearch} />
           </div>
           <div className={style.create}>
-            <Button className={style.btn} type="primary" onClick={() => setIsModalOpen(true)} >បង្កើតគណនីថ្មី</Button>
+            <Button
+              className={style.btn}
+              type="primary"
+              onClick={() => setIsModalOpen(true)}
+            >
+              បង្កើតគណនីថ្មី
+            </Button>
           </div>
         </div>
         <div>
-          <UserTable users={filteredUsers} handleUpdate={handleUpdate} handleDelete={handleDelete} handleChangePassword={handleChangePassword} />
+          <UserTable
+            users={filteredUsers}
+            handleUpdate={handleUpdate}
+            handleDelete={handleDelete}
+            handleChangePassword={handleChangePassword}
+          />
         </div>
       </main>
       <ModalUser
@@ -304,6 +332,6 @@ const UserPage = () => {
       />
     </Spin>
   );
-}
+};
 
 export default UserPage;

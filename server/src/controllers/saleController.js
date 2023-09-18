@@ -5,7 +5,22 @@ const asyncHandler = require("express-async-handler");
 
 const getList = asyncHandler(async (req, res, next) => {
   try {
-    const getListinvoices = "select * from invoices";
+    // const getListinvoices = "select * from invoices";
+    const getListinvoices =
+      "select i.id, i.description, i.customer_id, i.payment_type_id, c.name as customer_name, i.saleType, p.name as payment_name, i.products_khmer_currency, i.products_USD_currency, i.total_amount_USD, i.total_amount_khmer, i.debt, i.deposit, i.created_date, i.updated_date, u.fullname as user_fullname from invoices as i join customers as c on i.customer_id = c.id join paymenttypes as p on i.payment_type_id = p.id join users as u on i.user_id = u.id order by i.id DESC";
+    const getList = await executeQuery(getListinvoices);
+    res.json({
+      invoices: getList,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+const getListPayall = asyncHandler(async (req, res, next) => {
+  try {
+    // const getListinvoices = "select * from invoices";
+    const getListinvoices =
+      "select i.id, i.description, i.customer_id, i.payment_type_id, c.name as customer_name, i.saleType, p.name as payment_name, i.products_khmer_currency, i.products_USD_currency, i.total_amount_USD, i.total_amount_khmer, i.debt, i.deposit, i.created_date, i.updated_date, u.fullname as user_fullname from invoices as i join customers as c on i.customer_id = c.id join paymenttypes as p on i.payment_type_id = p.id join users as u on i.user_id = u.id where i.debt = 0 order by i.id DESC";
     const getList = await executeQuery(getListinvoices);
     res.json({
       invoices: getList,
@@ -18,7 +33,8 @@ const getList = asyncHandler(async (req, res, next) => {
 const getListDetail = asyncHandler(async (req, res, next) => {
   try {
     const id = req.params.id;
-    const getListinvoices = "select * from sales where invoice_id = ?";
+    const getListinvoices =
+      "select s.id, s.invoice_id, p.name, p.cashType, s.quantity, s.unit_price, s.sub_total from sales as s join products as p on s.product_id = p.id where invoice_id = ?";
     const getList = await executeQuery(getListinvoices, [id]);
     res.json({
       sales: getList,
@@ -30,7 +46,8 @@ const getListDetail = asyncHandler(async (req, res, next) => {
 
 const getListDebt = asyncHandler(async (req, res, next) => {
   try {
-    const getListinvoices = "select * from invoices where debt > 0";
+    const getListinvoices =
+      "select i.id, i.description, i.customer_id, i.payment_type_id, c.name as customer_name, i.saleType, p.name as payment_name, i.products_khmer_currency, i.products_USD_currency, i.total_amount_USD, i.total_amount_khmer, i.debt, i.deposit, i.created_date, i.updated_date, u.fullname as user_fullname from invoices as i join customers as c on i.customer_id = c.id join paymenttypes as p on i.payment_type_id = p.id join users as u on i.user_id = u.id where i.debt > 0 order by i.id DESC";
     const getList = await executeQuery(getListinvoices);
     res.json({
       invoices: getList,
@@ -43,7 +60,7 @@ const getListDebt = asyncHandler(async (req, res, next) => {
 const getListDebtLate = asyncHandler(async (req, res, next) => {
   try {
     const getListinvoices =
-      "select * from invoices where created_date < DATE_SUB(NOW(), INTERVAL 1 WEEK) and debt > 0";
+      "select i.id, i.description, i.customer_id, i.payment_type_id, c.name as customer_name, i.saleType, p.name as payment_name, i.products_khmer_currency, i.products_USD_currency, i.total_amount_USD, i.total_amount_khmer, i.debt, i.deposit, i.created_date, i.updated_date, u.fullname as user_fullname from invoices as i join customers as c on i.customer_id = c.id join paymenttypes as p on i.payment_type_id = p.id join users as u on i.user_id = u.id where i.created_date < DATE_SUB(NOW(), INTERVAL 1 WEEK) and i.debt > 0 order by i.id DESC";
     const getList = await executeQuery(getListinvoices);
     res.json({
       invoices: getList,
@@ -63,6 +80,7 @@ const create = asyncHandler(async (req, res, next) => {
       saleType,
       deposit,
       products,
+      description,
     } = req.body;
 
     if (!Array.isArray(products) || products.length === 0) {
@@ -175,7 +193,7 @@ const create = asyncHandler(async (req, res, next) => {
     let created_date = new Date().toISOString();
     let updated_date = new Date().toISOString();
     const queryInvoice =
-      "insert into invoices (customer_id, saleType, payment_type_id, products_khmer_currency, products_USD_currency, total_amount_USD, total_amount_khmer, debt, deposit, created_date, updated_date, user_id) values (?,?,?,?,?,?,?,?,?,?,?,?)";
+      "insert into invoices (customer_id, saleType, payment_type_id, products_khmer_currency, products_USD_currency, total_amount_USD, total_amount_khmer, debt, deposit, created_date, updated_date, user_id, description) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
     const queryInvoiceValue = [
       customer_id,
       saleType,
@@ -189,6 +207,7 @@ const create = asyncHandler(async (req, res, next) => {
       created_date,
       updated_date,
       user_id,
+      description,
     ];
     const [insertInvoice] = await connection.query(
       queryInvoice,
@@ -228,7 +247,7 @@ const create = asyncHandler(async (req, res, next) => {
 const update = asyncHandler(async (req, res, next) => {
   try {
     const id = req.params.id;
-    const { customer_id, payment_type_id, deposit } = req.body;
+    const { customer_id, payment_type_id, deposit, description } = req.body;
     const customerId = customer_id * 1;
     const paymentTypeId = payment_type_id * 1;
     const depositValue = deposit * 1;
@@ -251,12 +270,14 @@ const update = asyncHandler(async (req, res, next) => {
     }
     let newTotalUSD = totalUSD - depositValue;
     const updateQuery =
-      "update invoices set customer_id = ?, payment_type_id = ?, deposit = ?, debt = ? where id = ?";
+      "update invoices set customer_id = ?, payment_type_id = ?, deposit = ?, debt = ?, description = ?, updated_date = ? where id = ?";
     const update = await executeQuery(updateQuery, [
       customerId,
       paymentTypeId,
       depositValue,
       newTotalUSD,
+      description,
+      currentDate,
       id,
     ]);
     if (update.affectedRows > 0) {
@@ -352,4 +373,5 @@ module.exports = {
   getListDebt,
   getListDebtLate,
   getListDetail,
+  getListPayall,
 };

@@ -1,81 +1,98 @@
-
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import DashboardPage from '../pages/dashboard/DashboardPage';
-import InvoicePage from '../pages/invoice/InvoicePage';
-import ProductPage from '../pages/product/ProductPage';
-import RatePage from '../pages/rate/RatePage';
-import ReportPage from '../pages/report/ReportPage';
-import SalePage from '../pages/sale/SalePage';
-import UserPage from '../pages/user/UserPage';
-import PrivateRoutes from '../utils/ProtectedRoutes';
-import LoginPage from '../pages/login/LoginPage';
-import NotFoundPage from '../pages/notFound/NotFoundPage';
-import AdminLayout from '../layouts/admin/AdminLayout';
-import ManagerLayout from '../layouts/manager/ManagerLayout';
-import SalerLayout from '../layouts/saler/SalerLayout';
-import EmptyLayout from '../layouts/empty/EmptyLayout';
-import SupplierPage from '../pages/supplier/SupplierPage';
-import CategoryPage from '../pages/category/CategoryPage';
-import ReceiveProductPage from '../pages/receiveProduct/ReceiveProductPage';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import DashboardPage from "../pages/dashboard/DashboardPage";
+import InvoicePage from "../pages/invoice/InvoicePage";
+import ProductPage from "../pages/product/ProductPage";
+import RatePage from "../pages/rate/RatePage";
+import ReportPage from "../pages/report/ReportPage";
+import SalePage from "../pages/sale/SalePage";
+import UserPage from "../pages/user/UserPage";
+import PrivateRoutes from "../utils/ProtectedRoutes";
+import LoginPage from "../pages/login/LoginPage";
+import NotFoundPage from "../pages/notFound/NotFoundPage";
+import AdminLayout from "../layouts/admin/AdminLayout";
+import ManagerLayout from "../layouts/manager/ManagerLayout";
+import SalerLayout from "../layouts/saler/SalerLayout";
+import EmptyLayout from "../layouts/empty/EmptyLayout";
+import SupplierPage from "../pages/supplier/SupplierPage";
+import CategoryPage from "../pages/category/CategoryPage";
+import ReceiveProductPage from "../pages/receiveProduct/ReceiveProductPage";
 function MainRoute() {
-  const token = localStorage.getItem('access_token');
-  const role = localStorage.getItem('role');
+  const token = localStorage.getItem("access_token");
+  const role = localStorage.getItem("role");
   return (
     <BrowserRouter>
-      {token && role === "admin" &&
+      {token && role === "admin" && (
         <AdminLayout>
           <Routes>
             <Route element={<PrivateRoutes />}>
-              <Route path='/' element={<DashboardPage />} exact />
-              <Route path='/sale' element={<SalePage />} />
-              <Route path='/product' element={<ProductPage />} />
-              <Route path='/category' element={<CategoryPage />} />
-              <Route path='/user' element={<UserPage />} />
-              <Route path='/report' element={<ReportPage />} />
-              <Route path='/rate' element={<RatePage />} />
-              <Route path='/invoice' element={<InvoicePage />} />
-              <Route path='/supplier' element={<SupplierPage />} />
-              <Route path='/receiveProduct' element={<ReceiveProductPage />} />
+              <Route path="/" element={<DashboardPage />} exact />
+              <Route path="/sale" element={<SalePage />} />
+              <Route path="/product" element={<ProductPage />} />
+              <Route path="/category" element={<CategoryPage />} />
+              <Route path="/user" element={<UserPage />} />
+              <Route path="/report" element={<ReportPage />} />
+              <Route path="/rate" element={<RatePage />} />
+              <Route path="/invoice" element={<InvoicePage />} />
+              {/* <Route path="/invoice" element={<InvoiceLayout />}>
+                <Route index={true} element={<InvoicePage />} />
+                <Route
+                  index={false}
+                  path="debt"
+                  element={<InvoiceDebtPage />}
+                />
+                <Route
+                  index={false}
+                  path="debtLate"
+                  element={<InvoiceDebtLatePage />}
+                />
+                <Route
+                  index={false}
+                  path="payall"
+                  element={<InvoicePayAllPage />}
+                />
+              </Route> */}
+              <Route path="/supplier" element={<SupplierPage />} />
+              <Route path="/receiveProduct" element={<ReceiveProductPage />} />
             </Route>
-            <Route path='*' element={<NotFoundPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </AdminLayout>
-      }
-      {token && role === "manager" &&
+      )}
+      {token && role === "manager" && (
         <ManagerLayout>
           <Routes>
             <Route element={<PrivateRoutes />}>
-              <Route path='/' element={<DashboardPage />} exact />
-              <Route path='/sale' element={<SalePage />} />
-              <Route path='/product' element={<ProductPage />} />
-              <Route path='/report' element={<ReportPage />} />
-              <Route path='/rate' element={<RatePage />} />
-              <Route path='/invoice' element={<InvoicePage />} />
+              <Route path="/" element={<DashboardPage />} exact />
+              <Route path="/sale" element={<SalePage />} />
+              <Route path="/product" element={<ProductPage />} />
+              <Route path="/report" element={<ReportPage />} />
+              <Route path="/rate" element={<RatePage />} />
+              <Route path="/invoice" element={<InvoicePage />} />
             </Route>
-            <Route path='*' element={<NotFoundPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </ManagerLayout>
-      }
-      {token && role === "saler" &&
+      )}
+      {token && role === "saler" && (
         <SalerLayout>
           <Routes>
             <Route element={<PrivateRoutes />}>
-              <Route path='/sale' element={<SalePage />} />
-              <Route path='/rate' element={<RatePage />} />
-              <Route path='/invoice' element={<InvoicePage />} />
+              <Route path="/sale" element={<SalePage />} />
+              <Route path="/rate" element={<RatePage />} />
+              <Route path="/invoice" element={<InvoicePage />} />
             </Route>
-            <Route path='*' element={<Navigate to='/sale' />} />
+            <Route path="*" element={<Navigate to="/sale" />} />
           </Routes>
         </SalerLayout>
-      }
-      {!token &&
+      )}
+      {!token && (
         <EmptyLayout>
           <Routes>
-            <Route path='/login' element={<LoginPage />} />
-            <Route path='*' element={<Navigate to='/login' />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="*" element={<Navigate to="/login" />} />
           </Routes>
         </EmptyLayout>
-      }
+      )}
     </BrowserRouter>
   );
 }

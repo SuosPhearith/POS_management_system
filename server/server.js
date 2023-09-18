@@ -16,6 +16,7 @@ app.use("/api/products", require("./src/routes/productRoute"));
 app.use("/api/sales", require("./src/routes/saleRoute"));
 app.use("/api/paymentTypes", require("./src/routes/paymentTypesRoute"));
 app.use("/api/customers", require("./src/routes/customerRoute"));
+app.use("/api/exchangeRate", require("./src/routes/exchangeRateRoute"));
 app.use("/api/auth", require("./src/routes/authRoute"));
 
 // for allow middleware error

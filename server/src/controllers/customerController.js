@@ -8,7 +8,7 @@ const getList = asyncHandler(async (req, res, next) => {
     const getListCustomer = "select * from customers";
     const getList = await executeQuery(getListCustomer);
     res.json({
-      sales: getList,
+      customers: getList,
     });
   } catch (error) {
     next(error);

@@ -1,0 +1,63 @@
+.main{
+    width: 100%;
+    font-family: 'Khmer OS Content', sans-serif;
+}
+.container{
+    width: 100%;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.currency-wrapper{
+    width: 85%;
+    height: 300px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.exchanage-wrapper{
+    width: 85%;
+    height: 100px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.icon{
+    font-size: 50px;
+}
+.image{
+    width: 400px;
+}
+
+.exchange{
+    width: 33%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
+}
+.btnEdit{
+    width: 200px;
+    height: 50px;
+    border-style: none;
+    border-radius: 6px;
+    font-family: 'Khmer OS Content', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    background-color: aqua;
+    cursor: pointer;
+}
+.btnEdit:hover{
+    width: 200px;
+    height: 50px;
+    border-style: none;
+    border-radius: 6px;
+    font-family: 'Khmer OS Content', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    background-color: rgba(148, 251, 251, 0.792);
+    cursor: pointer;
+}
