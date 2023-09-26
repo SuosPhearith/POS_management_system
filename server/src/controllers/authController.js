@@ -10,6 +10,7 @@ const login = asyncHandler(async (req, res, next) => {
   try {
     const { username, password } = req.body;
     const querycheck = "select * from users where username = ?";
+    // const querycheck = "select * from users where username = " + username;
     const user = await executeQuery(querycheck, [username]);
     if (user.length === 0) {
       res.status(400);

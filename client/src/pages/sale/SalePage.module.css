@@ -1,0 +1,215 @@
+
+.main{
+    width: 100%;
+    font-family: 'Khmer OS Content', sans-serif;
+}
+.header{
+    width: 100%;
+    height: 6vh;
+    background-color: rgb(152, 179, 203);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.information{
+    margin-left: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 33%;
+    height: 100%;
+}
+.search{
+    margin-right: 30px;
+}
+.btn{
+    font-family: 'Khmer OS', sans-serif;
+    font-size: 16px;
+}
+.saleWrapper{
+    margin-top: 1vh;
+    width: 100%;
+    height: 85vh;
+    /* background-color: blue; */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.saleSide{
+    width: 45%;
+    height: 100%;
+    background-color: #ADC4CE;
+    border-radius: 6px;
+}
+.productSide{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 6px;
+    width: 54%;
+    height: 100%;
+    background-color: #ADC4CE;
+}
+.category{
+    width: 98%;
+    height: 24%;
+    display: flex;
+    justify-content: center;
+}
+.product{
+    width: 98%;
+    height: 72%;
+    display: flex;
+    justify-content: center;
+}
+.categoryWrapper{
+    width: 97%;
+    background-color: aliceblue;
+    display: flex;
+    overflow-y: scroll;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+.productWrapper{
+    width: 97%;
+    background-color: aliceblue;
+    display: flex;
+    overflow-y: scroll;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+.categoryElement{
+    width: 23%;
+    min-height: 40px;
+    height: 40px;
+    background-color: #cccccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    border: 1px solid rgb(0, 0, 0);
+    font-size: 16px;
+    font-family: 'Khmer OS Content', sans-serif;
+    margin: 3px;
+    cursor: pointer;
+}
+.productElement{
+    width: 23%;
+    min-height: 40px;
+    height: 120px;
+    background-color: #cccccc;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    border: 1px solid rgb(0, 0, 0);
+    font-size: 16px;
+    font-family: 'Khmer OS Content', sans-serif;
+    margin: 3px;
+    cursor: pointer;
+}
+
+
+
+
+.customer{
+    width: 100%;
+    height: 7%;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #738987;
+}
+.customerName{
+    width: 70%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.newCustomer{
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.productDetail{
+    width: 100%;
+    height: 33%;
+    display: flex;
+    align-items: center;
+}
+.productDetailWrapper{
+    margin-left: 10px;
+    width: 60%;
+    height: 90%;
+}
+.detailContailer{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.inputAnt{
+    width: 60%;
+}
+.inforProduct{
+    width: 30%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.addTable{
+    width: 100%;
+    height: 35%;
+}
+.payWrapper{
+    width: 100%;
+    height: 22%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+.payInfo{
+    width: 98%;
+    height: 32%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.payInfoPrint{
+    width: 98%;
+    height: 32%;
+    display: flex;
+    align-items: center;
+    justify-content:center;
+}
+.checkboxFont{
+    font-family: 'Khmer OS Content', sans-serif;
+    font-size: 14px;
+}
+.description{
+    display: flex;
+    width: 50%;
+    height: 80%;
+}
+.subDes{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+}
+.total{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 30%;
+}
+.btnPrint{
+    width: 50%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}

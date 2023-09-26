@@ -39,7 +39,7 @@ const RateModal = ({
         maskClosable={false}
         keyboard={false}
         width={330}
-        okText="កែប្រែ"
+        okText="សង"
         cancelText="បោះបង់"
       >
         <Space style={spaceStyle} direction="vertical">

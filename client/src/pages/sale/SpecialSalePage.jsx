@@ -25,7 +25,7 @@ const SalePage = () => {
     user_id: localStorage.getItem("id"),
     customer_id: customerId,
     payment_type_id: "1",
-    saleType: "unit",
+    saleType: "specail",
     debt: false,
     deposit: 0,
     description: "",
@@ -229,7 +229,7 @@ const SalePage = () => {
       name: name,
       cashType: cashType,
       quantity: prevItem.quantity + 1,
-      price: unit_price,
+      price: special_price,
       description: description,
     }));
   };
@@ -428,7 +428,7 @@ const SalePage = () => {
         <main className={style.main}>
           <div className={style.header}>
             <div className={style.information}>
-              <h3>POS / លក់រាយ</h3>
+              <h3>POS / លក់ពិសេស</h3>
             </div>
             <div className={style.search}>
               <Search searchQuery={searchQuery} handleSearch={handleSearch} />

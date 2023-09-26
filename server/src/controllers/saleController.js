@@ -78,6 +78,7 @@ const create = asyncHandler(async (req, res, next) => {
       customer_id,
       payment_type_id,
       saleType,
+      debt,
       deposit,
       products,
       description,
@@ -108,8 +109,17 @@ const create = asyncHandler(async (req, res, next) => {
       res.status(400);
       throw new Error("ID payment user not found!");
     }
-
-    if (!user_id || !customer_id || !payment_type_id || !saleType || !deposit) {
+    if (typeof debt !== "boolean") {
+      res.status(400);
+      throw new Error("Have debt problem!");
+    }
+    if (
+      !user_id ||
+      !customer_id ||
+      !payment_type_id ||
+      !saleType ||
+      deposit < 0
+    ) {
       res.status(400);
       throw new Error("Please input all field!");
     }
@@ -134,7 +144,6 @@ const create = asyncHandler(async (req, res, next) => {
             "select riel from exchangeRate where id = 1";
           const query = await executeQuery(exchangeRateQuery);
           const exchangeRate = query[0].riel * 1;
-          console.log(exchangeRate);
           total += (productPrice / exchangeRate) * product.quantity;
         }
       }
@@ -182,8 +191,13 @@ const create = asyncHandler(async (req, res, next) => {
     let totalAmountKhmer = totalAmountUSD * exchangeRate;
     const totalKhmer = await calculateTotalKhmerCurrency(products);
     const totalUSD = await calculateTotalUSDCurrency(products);
-    let debt = totalAmountUSD - deposit * 1;
-    if (deposit * 1 > totalAmountUSD) {
+    let debtValue = totalAmountUSD - deposit * 1;
+    let depositValue = deposit * 1;
+    if (debt === false) {
+      debtValue = 0;
+      depositValue = totalAmountUSD;
+    }
+    if (depositValue > totalAmountUSD) {
       res.status(400);
       throw new Error("Deposite invalid!");
     }
@@ -202,8 +216,8 @@ const create = asyncHandler(async (req, res, next) => {
       totalUSD,
       totalAmountUSD,
       totalAmountKhmer,
-      debt,
-      deposit,
+      debtValue,
+      depositValue,
       created_date,
       updated_date,
       user_id,
@@ -231,6 +245,32 @@ const create = asyncHandler(async (req, res, next) => {
     const [insertSale] = await connection.query(querySale, [querySaleValue]);
     if (insertSale.affectedRows === 0) {
       res.status(500);
+    }
+    // update product quantity
+    for (const product of products) {
+      const { product_id, quantity } = product;
+      const updateProductQuantityQuery =
+        "UPDATE products SET quantity = quantity - ? WHERE id = ?";
+      let finalQuantity = quantity;
+      if (saleType !== "unit") {
+        const getUnitQuantity =
+          "select unit_quantity from products where id = ?";
+        const [querygetUnitQuantity] = await connection.query(getUnitQuantity, [
+          product_id,
+        ]);
+        finalQuantity = quantity * querygetUnitQuantity[0].unit_quantity;
+      }
+
+      try {
+        // Execute the update query within the same transaction
+        await connection.query(updateProductQuantityQuery, [
+          finalQuantity,
+          product_id,
+        ]);
+      } catch (error) {
+        await connection.rollback();
+        next(error);
+      }
     }
     // commit this code to database
     await connection.commit();

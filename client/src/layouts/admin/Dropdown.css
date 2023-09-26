@@ -1,0 +1,51 @@
+/* Basic styles for the sale container */
+.sale-container {
+    display: inline-block;
+    position: relative;
+    margin: 20px;
+  }
+  
+  /* Style for the sale button */
+  .sale-button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  /* Style for the popup menu */
+  .popup-menu {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: none;
+    z-index: 1000; /* Ensure the popup is on top of other elements */
+  }
+  
+  /* Style for popup menu items */
+  .popup-menu ul {
+    padding: 10px;
+    list-style: none;
+  }
+  
+  .popup-menu li {
+    margin-bottom: 5px;
+    cursor: pointer;
+  }
+  
+  /* Arrow styles */
+  .arrow {
+    width: 10px;
+    height: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    transform: rotate(45deg);
+    position: absolute;
+    top: -6px;
+    right: 15px;
+  }
+  

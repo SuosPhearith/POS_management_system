@@ -16,6 +16,9 @@ import EmptyLayout from "../layouts/empty/EmptyLayout";
 import SupplierPage from "../pages/supplier/SupplierPage";
 import CategoryPage from "../pages/category/CategoryPage";
 import ReceiveProductPage from "../pages/receiveProduct/ReceiveProductPage";
+import ProductSalePage from "../pages/sale/ProductSalePage";
+import SpecialSalePage from "../pages/sale/SpecialSalePage";
+import CustomerPage from "../pages/customer/CustomerPage";
 function MainRoute() {
   const token = localStorage.getItem("access_token");
   const role = localStorage.getItem("role");
@@ -27,12 +30,15 @@ function MainRoute() {
             <Route element={<PrivateRoutes />}>
               <Route path="/" element={<DashboardPage />} exact />
               <Route path="/sale" element={<SalePage />} />
+              <Route path="/productSale" element={<ProductSalePage />} />
+              <Route path="/specialSale" element={<SpecialSalePage />} />
               <Route path="/product" element={<ProductPage />} />
               <Route path="/category" element={<CategoryPage />} />
               <Route path="/user" element={<UserPage />} />
               <Route path="/report" element={<ReportPage />} />
               <Route path="/rate" element={<RatePage />} />
               <Route path="/invoice" element={<InvoicePage />} />
+              <Route path="/customer" element={<CustomerPage />} />
               {/* <Route path="/invoice" element={<InvoiceLayout />}>
                 <Route index={true} element={<InvoicePage />} />
                 <Route
