@@ -46,14 +46,14 @@ const Invoice = ({ handlePrintInvoice, handleCancelPrint }) => {
                 <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6 text-end">
                   <button
                     onClick={() => handlePrintInvoice()}
-                    className="btn btn-light text-capitalize border-0"
+                    className="btn btn-light text-capitalize border-0 hide-on-print"
                     data-mdb-ripple-color="dark"
                   >
                     <i className="fas fa-print text-primary"></i> Print
                   </button>
                   <button
                     onClick={() => handleCancelPrint()}
-                    className="btn btn-light text-capitalize"
+                    className="btn btn-light text-capitalize hide-on-print"
                     data-mdb-ripple-color="dark"
                   >
                     <i className="far fa-file-pdf text-danger"></i> Back
@@ -108,7 +108,7 @@ const Invoice = ({ handlePrintInvoice, handleCancelPrint }) => {
                           className="fas fa-circle"
                           style={{ color: "#84B0CA" }}
                         ></i>{" "}
-                        <span className="total-price fw-bold me-1">
+                        <span className="total-price fw-bold">
                           កាលបរិច្ឆេទ​បង្កើត:
                         </span>{" "}
                         {DateConverter(dataForPrint[0].created_date)}
@@ -158,51 +158,64 @@ const Invoice = ({ handlePrintInvoice, handleCancelPrint }) => {
                     </tbody>
                   </table>
                 </div>
+                <hr />
 
-                <div className="row">
-                  <div className="col-xl-8 col-sm-8 col-7">
+                <div className="row ms-5">
+                  <div className="col-xl-6 col-lg-6 col-md-6 col-sm-4 col-4">
                     <p className="total-price ms-3">
                       {dataForPrint[0].description}
                     </p>
                   </div>
-                  <div className="col-xl-4 col-sm-4 col-5">
+                  <div className="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-4">
                     <div className="d-flex flex-column">
-                      <div className="text-muted mt-2">
+                      <div className="total-price text-muted mt-2" dir="rtl">
                         <span className="total-price text-black me-1">
-                          តម្លៃសរុបគិតជាលុយខ្មែរ:
-                        </span>
-                        <span className="total">
-                          ៛{dataForPrint[0].total_amount_khmer}
+                          : តម្លៃសរុបគិតជាលុយខ្មែរ
                         </span>
                       </div>
-                      <div className="total-price text-muted mt-2">
-                        <span className="text-black me-1">
-                          តម្លៃសរុបគិតជាដុល្លា:
-                        </span>
-                        <span className="total">
-                          ${roundUp(dataForPrint[0].total_amount_USD)}
+                      <div className="total-price text-muted mt-2" dir="rtl">
+                        <span className="total-price text-black me-1">
+                          : តម្លៃសរុបគិតជាដុល្លា
                         </span>
                       </div>
-                      <div className="text-muted mt-2">
+                      <div className="total-price text-muted mt-2" dir="rtl">
                         <span className="total-price text-black me-1">
-                          ប្រាក់បង់:
+                          : ប្រាក់បង់
                         </span>
-                        <span className="total">
-                          ${roundUp(dataForPrint[0].deposit)}
+                      </div>
+                      <div className="total-price text-muted mt-2" dir="rtl">
+                        <span className="total-price text-black me-1">
+                          : ជំពាក់សរុប
                         </span>
                       </div>
                     </div>
-                    <div className="d-flex flex-column mt-2">
-                      <div className="text-black float-start">
-                        <span className="total-price text-black me-3">
-                          {" "}
-                          ជំពាក់សរុប:
+                  </div>
+                  <div className="col-xl-1 col-lg-1 col-md-2 col-sm-2 col-2">
+                    <div className="d-flex flex-column">
+                      <div className="total-price text-muted mt-2" dir="rtl">
+                        <span className="total-price text-black me-1">
+                          ៛{dataForPrint[0].total_amount_khmer}
                         </span>
-                        <span className="total">${dataForPrint[0].debt}</span>
+                      </div>
+                      <div className="total-price text-muted mt-2" dir="rtl">
+                        <span className="total-price text-black me-1">
+                          ${roundUp(dataForPrint[0].total_amount_USD)}
+                        </span>
+                      </div>
+                      <div className="total-price text-muted mt-2" dir="rtl">
+                        <span className="total-price text-black me-1">
+                          ${roundUp(dataForPrint[0].deposit)}
+                        </span>
+                      </div>
+                      <div className="total-price text-muted mt-2" dir="rtl">
+                        <span className="total-price text-black me-1">
+                          ${dataForPrint[0].debt}
+                        </span>
                       </div>
                     </div>
                   </div>
                 </div>
+
                 <hr />
               </div>
             </div>

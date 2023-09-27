@@ -9,7 +9,7 @@ import ListCategory from "../../components/sale/ListCategory";
 import CreaeteCustomerModal from "../../components/sale/CreaeteCustomerModal";
 import InputNumber from "../../components/usefull/NumericInput";
 import InputNumberFloat from "../../components/usefull/NumbericInputFloat";
-import InvoicePrint from "../../components/print/InvoicePrint";
+import InvoicePrint from "../../components/print/ReceiptPrint";
 import { Button, Input, Select, Spin, Radio, message, Checkbox } from "antd";
 import { adminLayoutContext } from "../../layouts/admin/AdminLayout";
 import "./SalePage.css";
@@ -95,7 +95,17 @@ const SalePage = () => {
   };
   const handlePrintInvoice = () => {
     window.print();
+    setPrint(false);
   };
+  const handleOpenPrint = async () => {
+    if (validateCreateInvoice()) {
+      return;
+    }
+    localStorage.setItem("dataForPrint", "[]");
+    await handleCreateInvoice(); // Wait for handleCreateInvoice to complete
+    setPrint(true);
+  };
+
   const handleCancelPrint = () => {
     setPrint(false);
   };
@@ -372,7 +382,7 @@ const SalePage = () => {
         products: saleItems,
       };
       const response = await request("POST", "sales/create", productData);
-      message.success(response.message);
+      // message.success(response.message);
       const dataString = JSON.stringify(response.Invoice);
       localStorage.setItem("dataForPrint", dataString);
       handleCancelForm();
@@ -609,10 +619,16 @@ const SalePage = () => {
                       >
                         រក្សាទុក
                       </Button>
-                      <Button onClick={() => setPrint(true)} type="primary">
+                      <Button onClick={() => handleOpenPrint()} type="primary">
                         Print receipt
                       </Button>
-                      <Button type="primary">Print invoice</Button>
+                      <Button
+                        onClick={() => handleCancelForm()}
+                        type="primary"
+                        danger
+                      >
+                        Cancel
+                      </Button>
                     </div>
                   </div>
                 </div>

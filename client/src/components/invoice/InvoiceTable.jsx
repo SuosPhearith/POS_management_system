@@ -13,6 +13,7 @@ const CategoryTable = ({
   handlePayback,
   handleDetail,
   invoiceType,
+  handlePrint,
 }) => {
   const tableType = () => {
     if (invoiceType === "all") {
@@ -213,7 +214,7 @@ const CategoryTable = ({
           >
             <TbFileInvoice />
           </Button>
-          <Button type="primary" onClick={() => handleUpdate(null)}>
+          <Button type="primary" onClick={() => handlePrint(record.id)}>
             <AiFillPrinter />
           </Button>
         </Space>

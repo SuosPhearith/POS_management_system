@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import InvoiceTable from "../../components/invoice/InvoiceTable";
 import errorHandler from "../../utils/ErrorHandler";
 import request from "../../services/request";
@@ -8,7 +8,10 @@ import { Spin, message } from "antd";
 import InvoiceDetailModal from "../../components/invoice/InvoiceDetailModal";
 import style from "./InvoicePage.module.css";
 import Search from "../../components/search/Search";
+import { adminLayoutContext } from "../../layouts/admin/AdminLayout";
+import InvoicePrint from "../../components/print/InvoicePrint";
 const InvoicePage = () => {
+  const { print, setPrint } = useContext(adminLayoutContext);
   const [invoiceType, setInvoiceType] = useState("all");
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -282,70 +285,105 @@ const InvoicePage = () => {
       invoiceId.toLowerCase().includes(searchQuery.toLowerCase())
     );
   });
+  // function get list print
+  const getListPrint = async (id) => {
+    try {
+      setLoading(true);
+      const response = await request("GET", `sales/getListPrint/${id}`);
+      const dataString = JSON.stringify(response.Invoice);
+      localStorage.setItem("dataForPrint", dataString);
+    } catch (error) {
+      errorHandler(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handlePrint = async (id) => {
+    localStorage.setItem("dataForPrint", "[]");
+    await getListPrint(id); // Wait for handleCreateInvoice to complete
+    setPrint(true);
+  };
+  const handlePrintInvoice = () => {
+    //code
+    window.print();
+    setPrint(false);
+  };
+  const handleCancelPrint = () => {
+    //code
+    setPrint(false);
+  };
   return (
     <>
       <Spin spinning={loading}>
-        <main className={style.main}>
-          <div className={style.header}>
-            <div className={style.search}>
-              <h3>POS / គ្រប់គ្រងវិកាយប័ត្រ</h3>
-              <Search searchQuery={searchQuery} handleSearch={handleSearch} />
+        {print ? (
+          <InvoicePrint
+            handlePrintInvoice={handlePrintInvoice}
+            handleCancelPrint={handleCancelPrint}
+          />
+        ) : (
+          <main className={style.main}>
+            <div className={style.header}>
+              <div className={style.search}>
+                <h3>POS / គ្រប់គ្រងវិកាយប័ត្រ</h3>
+                <Search searchQuery={searchQuery} handleSearch={handleSearch} />
+              </div>
+              <div className={style.create}>
+                <button
+                  className={style.btn}
+                  onClick={() => setInvoiceType("all")}
+                >
+                  វិកាយប័ត្រទាំងអស់​​
+                </button>
+                <button
+                  className={style.btn}
+                  onClick={() => setInvoiceType("debt")}
+                >
+                  វិកាយប័ត្រជំពាក់
+                </button>
+                <button
+                  className={style.btn}
+                  onClick={() => setInvoiceType("debtLate")}
+                >
+                  វិកាយប័ត្រជំពាក់លើស៧ថ្ងៃ
+                </button>
+                <button
+                  className={style.btn}
+                  onClick={() => setInvoiceType("payAll")}
+                >
+                  វិកាយប័ត្របង់លុយហើយ
+                </button>
+              </div>
             </div>
-            <div className={style.create}>
-              <button
-                className={style.btn}
-                onClick={() => setInvoiceType("all")}
-              >
-                វិកាយប័ត្រទាំងអស់​​
-              </button>
-              <button
-                className={style.btn}
-                onClick={() => setInvoiceType("debt")}
-              >
-                វិកាយប័ត្រជំពាក់
-              </button>
-              <button
-                className={style.btn}
-                onClick={() => setInvoiceType("debtLate")}
-              >
-                វិកាយប័ត្រជំពាក់លើស៧ថ្ងៃ
-              </button>
-              <button
-                className={style.btn}
-                onClick={() => setInvoiceType("payAll")}
-              >
-                វិកាយប័ត្របង់លុយហើយ
-              </button>
-            </div>
-          </div>
-          <InvoiceTable
-            invoices={filteredInvoices}
-            handleUpdate={handleUpdate}
-            handleDelete={handleDelete}
-            handlePayback={handlePayback}
-            handleDetail={handleDetail}
-            invoiceType={invoiceType}
-          />
-          <InvoiceModal
-            isModalOpen={isModalOpen}
-            handleSubmit={handleSubmit}
-            handleCancelForm={handleCancelForm}
-            form={form}
-            setForm={setForm}
-          />
-          <InvoicePaybackModal
-            isModalOpenPayback={isModalOpenPayback}
-            handleSubmitPayback={handleSubmitPayback}
-            handleCancelFormPayback={handleCancelFormPayback}
-            paybackForm={paybackForm}
-            setPaybackForm={setPaybackForm}
-          />
-          <InvoiceDetailModal
-            isModalOpenDetail={isModalOpenDetail}
-            handleCancelDetail={handleCancelDetail}
-            formDetail={formDetail}
-          />
-        </main>
+            <InvoiceTable
+              invoices={filteredInvoices}
+              handleUpdate={handleUpdate}
+              handleDelete={handleDelete}
+              handlePayback={handlePayback}
+              handleDetail={handleDetail}
+              invoiceType={invoiceType}
+              handlePrint={handlePrint}
+            />
+            <InvoiceModal
+              isModalOpen={isModalOpen}
+              handleSubmit={handleSubmit}
+              handleCancelForm={handleCancelForm}
+              form={form}
+              setForm={setForm}
+            />
+            <InvoicePaybackModal
+              isModalOpenPayback={isModalOpenPayback}
+              handleSubmitPayback={handleSubmitPayback}
+              handleCancelFormPayback={handleCancelFormPayback}
+              paybackForm={paybackForm}
+              setPaybackForm={setPaybackForm}
+            />
+            <InvoiceDetailModal
+              isModalOpenDetail={isModalOpenDetail}
+              handleCancelDetail={handleCancelDetail}
+              formDetail={formDetail}
+            />
+          </main>
+        )}
       </Spin>
     </>
   );

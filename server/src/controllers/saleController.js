@@ -413,6 +413,24 @@ const payBackAll = asyncHandler(async (req, res, next) => {
   }
 });
 
+const gitListPrint = asyncHandler(async (req, res, next) => {
+  try {
+    const invoice_id = req.params.id;
+    const queryCreateInvoice =
+      "select s.invoice_id, s.product_id, s.quantity, s.unit_price, s.sub_total, c.name as customer_name, c.contact, c.address, p.name as product_name, i.id as invoice_id, i.description, i.total_amount_USD, i.total_amount_khmer, i.debt, i.deposit, i.created_date, u.fullname  from invoices as i join sales as s on i.id = s.invoice_id join customers as c on i.customer_id = c.id join users as u on i.user_id = u.id join products as p on s.product_id = p.id where s.invoice_id = ?";
+    const createInvoice = await executeQuery(queryCreateInvoice, [invoice_id]);
+    if (Array.isArray(createInvoice)) {
+      createInvoice.forEach((invoice) => {
+        delete invoice.password;
+      });
+    }
+    res.status(201).json({
+      Invoice: createInvoice,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 module.exports = {
   getList,
   create,
@@ -424,4 +442,5 @@ module.exports = {
   getListDebtLate,
   getListDetail,
   getListPayall,
+  gitListPrint,
 };

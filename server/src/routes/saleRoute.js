@@ -7,6 +7,7 @@ const roles = require("../utils/roles");
 router.use(authenticateToken([roles.admin, roles.manager, roles.seller]));
 router.route("/getList").get(sale.getList);
 router.route("/getList/:id").get(sale.getListDetail);
+router.route("/getListPrint/:id").get(sale.gitListPrint);
 router.route("/getListDebt").get(sale.getListDebt);
 router.route("/getListDebtLate").get(sale.getListDebtLate);
 router.route("/getListPayall").get(sale.getListPayall);
