@@ -39,6 +39,7 @@ function MainRoute() {
               <Route path="/rate" element={<RatePage />} />
               <Route path="/invoice" element={<InvoicePage />} />
               <Route path="/customer" element={<CustomerPage />} />
+
               {/* <Route path="/invoice" element={<InvoiceLayout />}>
                 <Route index={true} element={<InvoicePage />} />
                 <Route

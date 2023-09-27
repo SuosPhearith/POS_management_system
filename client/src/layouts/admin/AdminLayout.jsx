@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, createContext } from "react";
 import style from "./AdminLayout.module.css";
 import { BsChevronLeft } from "react-icons/bs";
 import { BsChevronRight } from "react-icons/bs";
@@ -19,8 +19,10 @@ import { Link } from "react-router-dom";
 import { Button, Dropdown } from "antd";
 import logout from "../../utils/Logout";
 import "./Dropdown.css";
+export const adminLayoutContext = createContext();
 
 const Layout = ({ children }) => {
+  const [print, setPrint] = useState(false);
   const [toggle, setToggle] = useState(true);
   const fullname = localStorage.getItem("fullname");
   const username = localStorage.getItem("username");
@@ -102,130 +104,136 @@ const Layout = ({ children }) => {
     },
   ];
   return (
-    <>
-      <div className={style.body}>
-        <div className={style.layout_container}>
-          <div
-            className={
-              toggle ? style.layout_wrapper1_toggle : style.layout_wrapper1
-            }
-          >
-            <div className={style.layout_logo}>POS</div>
-            <div className={style.layout_route}>
-              {/* Links and icons here */}
-              <Link className={style.layout_link} to="/">
-                {toggle ? (
-                  <MdDashboard className={style.layout_link_icon} />
-                ) : (
-                  "គ្រប់គ្រងទូទៅ"
-                )}
-              </Link>
-              <Dropdown
-                className={style.layout_link}
-                menu={{
-                  items,
-                }}
-                placement="rightCenter"
-              >
-                <div
-                  style={{ cursor: "pointer" }}
-                  onClick={(e) => e.preventDefault()}
-                >
-                  {toggle ? (
-                    <BsCartCheckFill className={style.layout_link_icon} />
-                  ) : (
-                    "លក់ទំនិញចេញ"
-                  )}
-                </div>
-              </Dropdown>
-              <Dropdown
-                className={style.layout_link}
-                menu={{
-                  items: items2,
-                }}
-                placement="rightCenter"
-              >
-                <div
-                  style={{ cursor: "pointer" }}
-                  onClick={(e) => e.preventDefault()}
-                >
-                  {toggle ? (
-                    <BsFillBoxFill className={style.layout_link_icon} />
-                  ) : (
-                    "គ្រប់គ្រងទំនិញ"
-                  )}
-                </div>
-              </Dropdown>
-              <Link className={style.layout_link} to="/user">
-                {toggle ? (
-                  <FaUserEdit className={style.layout_link_icon} />
-                ) : (
-                  "គ្រប់គ្រងបុគ្គលិក"
-                )}
-              </Link>
-              <Link className={style.layout_link} to="/supplier">
-                {toggle ? (
-                  <FaUserTie className={style.layout_link_icon} />
-                ) : (
-                  "គ្រប់គ្រងអ្នកនាំចូល"
-                )}
-              </Link>
-              <Link className={style.layout_link} to="/customer">
-                {toggle ? (
-                  <FaUsers className={style.layout_link_icon} />
-                ) : (
-                  "គ្រប់គ្រងអតិថិជន"
-                )}
-              </Link>
-              <Link className={style.layout_link} to="/invoice">
-                {toggle ? (
-                  <IoReceipt className={style.layout_link_icon} />
-                ) : (
-                  "គ្រប់គ្រងវិកាលប័ត្រ"
-                )}
-              </Link>
-              <Link className={style.layout_link} to="/rate">
-                {toggle ? (
-                  <BsCashCoin className={style.layout_link_icon} />
-                ) : (
-                  "អត្រាប្តូរប្រាក់"
-                )}
-              </Link>
-              <Link className={style.layout_link} to="/report">
-                {toggle ? (
-                  <BsFillClipboardDataFill className={style.layout_link_icon} />
-                ) : (
-                  "គ្រប់គ្រង់របាយការណ៏"
-                )}
-              </Link>
-            </div>
-            <button
-              className={style.layout_toggle}
-              onClick={() => setToggle(!toggle)}
+    <adminLayoutContext.Provider value={{ print, setPrint }}>
+      {print ? (
+        <main className={style.layout_main}>{children}</main>
+      ) : (
+        <div className={style.body}>
+          <div className={style.layout_container}>
+            <div
+              className={
+                toggle ? style.layout_wrapper1_toggle : style.layout_wrapper1
+              }
             >
-              {toggle ? <BsChevronRight /> : <BsChevronLeft />}
-            </button>
-          </div>
-          <div
-            className={
-              toggle ? style.layout_wrapper2_toggle : style.layout_wrapper2
-            }
-          >
-            <div className={style.layout_header}>
-              <Dropdown menu={{ items: menuUser }} placement="bottom">
-                <Button className={style.layout_profile}>
-                  <div className={style.layout_profile_icon}>
-                    <BiSolidUserCircle />
+              <div className={style.layout_logo}>POS</div>
+              <div className={style.layout_route}>
+                {/* Links and icons here */}
+                <Link className={style.layout_link} to="/">
+                  {toggle ? (
+                    <MdDashboard className={style.layout_link_icon} />
+                  ) : (
+                    "គ្រប់គ្រងទូទៅ"
+                  )}
+                </Link>
+                <Dropdown
+                  className={style.layout_link}
+                  menu={{
+                    items,
+                  }}
+                  placement="rightCenter"
+                >
+                  <div
+                    style={{ cursor: "pointer" }}
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    {toggle ? (
+                      <BsCartCheckFill className={style.layout_link_icon} />
+                    ) : (
+                      "លក់ទំនិញចេញ"
+                    )}
                   </div>
-                  <div className={style.layout_profile_name}>{fullname}</div>
-                </Button>
-              </Dropdown>
+                </Dropdown>
+                <Dropdown
+                  className={style.layout_link}
+                  menu={{
+                    items: items2,
+                  }}
+                  placement="rightCenter"
+                >
+                  <div
+                    style={{ cursor: "pointer" }}
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    {toggle ? (
+                      <BsFillBoxFill className={style.layout_link_icon} />
+                    ) : (
+                      "គ្រប់គ្រងទំនិញ"
+                    )}
+                  </div>
+                </Dropdown>
+                <Link className={style.layout_link} to="/user">
+                  {toggle ? (
+                    <FaUserEdit className={style.layout_link_icon} />
+                  ) : (
+                    "គ្រប់គ្រងបុគ្គលិក"
+                  )}
+                </Link>
+                <Link className={style.layout_link} to="/supplier">
+                  {toggle ? (
+                    <FaUserTie className={style.layout_link_icon} />
+                  ) : (
+                    "គ្រប់គ្រងអ្នកនាំចូល"
+                  )}
+                </Link>
+                <Link className={style.layout_link} to="/customer">
+                  {toggle ? (
+                    <FaUsers className={style.layout_link_icon} />
+                  ) : (
+                    "គ្រប់គ្រងអតិថិជន"
+                  )}
+                </Link>
+                <Link className={style.layout_link} to="/invoice">
+                  {toggle ? (
+                    <IoReceipt className={style.layout_link_icon} />
+                  ) : (
+                    "គ្រប់គ្រងវិកាលប័ត្រ"
+                  )}
+                </Link>
+                <Link className={style.layout_link} to="/rate">
+                  {toggle ? (
+                    <BsCashCoin className={style.layout_link_icon} />
+                  ) : (
+                    "អត្រាប្តូរប្រាក់"
+                  )}
+                </Link>
+                <Link className={style.layout_link} to="/report">
+                  {toggle ? (
+                    <BsFillClipboardDataFill
+                      className={style.layout_link_icon}
+                    />
+                  ) : (
+                    "គ្រប់គ្រង់របាយការណ៏"
+                  )}
+                </Link>
+              </div>
+              <button
+                className={style.layout_toggle}
+                onClick={() => setToggle(!toggle)}
+              >
+                {toggle ? <BsChevronRight /> : <BsChevronLeft />}
+              </button>
             </div>
-            <main className={style.layout_main}>{children}</main>
+            <div
+              className={
+                toggle ? style.layout_wrapper2_toggle : style.layout_wrapper2
+              }
+            >
+              <div className={style.layout_header}>
+                <Dropdown menu={{ items: menuUser }} placement="bottom">
+                  <Button className={style.layout_profile}>
+                    <div className={style.layout_profile_icon}>
+                      <BiSolidUserCircle />
+                    </div>
+                    <div className={style.layout_profile_name}>{fullname}</div>
+                  </Button>
+                </Dropdown>
+              </div>
+              <main className={style.layout_main}>{children}</main>
+            </div>
           </div>
         </div>
-      </div>
-    </>
+      )}
+    </adminLayoutContext.Provider>
   );
 };
 

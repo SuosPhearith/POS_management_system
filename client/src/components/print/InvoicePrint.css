@@ -1,0 +1,55 @@
+/* Invoice.css */
+.card{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+/* Apply A5 page size and landscape orientation for printing */
+@media print {
+    body {
+      size: A5 portrait;
+      margin: 0;
+    }
+  
+    .card {
+      width: 100%; /* Ensure the card takes the full A5 width */
+    }
+  
+    /* Additional print-specific styles go here */
+    /* For example, you can add page breaks or adjust font sizes */
+  }
+  .total{
+    font-size: 20px;
+  }
+  @media (max-width: 574px) {
+    /* Select the element you want to style */
+    *{
+      /* Set the width you want for this element */
+      font-size: 11px;
+    }
+    .total{
+      font-size: 13px;
+    }
+  }
+
+  .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    margin-top: 8px;
+    font-weight: 700;
+    font-size: 17px;
+}
+.ant-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.ant-modal-footer{
+  display: flex;
+  justify-content: flex-end;
+}
+.ant-popconfirm-buttons{
+  display: flex;
+  justify-content: flex-end;
+}
+.total-price{
+  font-family: 'Khmer OS Content', sans-serif;
+}

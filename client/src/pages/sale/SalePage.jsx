@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import style from "./SalePage.module.css";
 import Search from "../../components/search/Search";
 import request from "../../services/request";
@@ -9,10 +9,13 @@ import ListCategory from "../../components/sale/ListCategory";
 import CreaeteCustomerModal from "../../components/sale/CreaeteCustomerModal";
 import InputNumber from "../../components/usefull/NumericInput";
 import InputNumberFloat from "../../components/usefull/NumbericInputFloat";
+import InvoicePrint from "../../components/print/InvoicePrint";
 import { Button, Input, Select, Spin, Radio, message, Checkbox } from "antd";
-
+import { adminLayoutContext } from "../../layouts/admin/AdminLayout";
+import "./SalePage.css";
 const SalePage = () => {
   // globle
+  const { print, setPrint } = useContext(adminLayoutContext);
   const inputNumberRef = useRef();
   const [categories, setCategories] = useState([]);
   const [customerId, setCustomerId] = useState(3);
@@ -70,7 +73,6 @@ const SalePage = () => {
   };
 
   useEffect(() => {
-    console.log("inputNumberRef:", inputNumberRef);
     inputNumberRef?.current?.focus();
   }, [saleItems]);
 
@@ -90,6 +92,12 @@ const SalePage = () => {
       ...items,
       debt: e.target.checked,
     });
+  };
+  const handlePrintInvoice = () => {
+    window.print();
+  };
+  const handleCancelPrint = () => {
+    setPrint(false);
   };
   // End globle
 
@@ -365,6 +373,8 @@ const SalePage = () => {
       };
       const response = await request("POST", "sales/create", productData);
       message.success(response.message);
+      const dataString = JSON.stringify(response.Invoice);
+      localStorage.setItem("dataForPrint", dataString);
       handleCancelForm();
     } catch (error) {
       errorhandler(error);
@@ -425,200 +435,210 @@ const SalePage = () => {
   return (
     <>
       <Spin spinning={loading}>
-        <main className={style.main}>
-          <div className={style.header}>
-            <div className={style.information}>
-              <h3>POS / លក់រាយ</h3>
+        {print ? (
+          <InvoicePrint
+            handlePrintInvoice={handlePrintInvoice}
+            handleCancelPrint={handleCancelPrint}
+          />
+        ) : (
+          <main className={style.main}>
+            <div className={style.header}>
+              <div className={style.information}>
+                <h3>POS / លក់រាយ</h3>
+              </div>
+              <div className={style.search}>
+                <Search searchQuery={searchQuery} handleSearch={handleSearch} />
+              </div>
             </div>
-            <div className={style.search}>
-              <Search searchQuery={searchQuery} handleSearch={handleSearch} />
-            </div>
-          </div>
-          <div className={style.saleWrapper}>
-            <div className={style.saleSide}>
-              <div className={style.customer}>
-                <div className={style.customerName}>
-                  <div>ឈ្មោះអតិថិជន:</div>
-                  <div>
-                    <Select
-                      value={findLabel()}
-                      onChange={handleSelectChangeCustomer}
-                      showSearch
-                      style={selectStyle}
-                      placeholder="ជ្រើសរើសឈ្មោះអតិថិជន"
-                      optionFilterProp="children"
-                      filterOption={(input, option) =>
-                        (option?.label ?? "").includes(input)
-                      }
-                      filterSort={(optionA, optionB) =>
-                        (optionA?.label ?? "")
-                          .toLowerCase()
-                          .localeCompare((optionB?.label ?? "").toLowerCase())
-                      }
-                      options={customers}
-                    />
+            <div className={style.saleWrapper}>
+              <div className={style.saleSide}>
+                <div className={style.customer}>
+                  <div className={style.customerName}>
+                    <div>ឈ្មោះអតិថិជន:</div>
+                    <div>
+                      <Select
+                        value={findLabel()}
+                        onChange={handleSelectChangeCustomer}
+                        showSearch
+                        style={selectStyle}
+                        placeholder="ជ្រើសរើសឈ្មោះអតិថិជន"
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                          (option?.label ?? "").includes(input)
+                        }
+                        filterSort={(optionA, optionB) =>
+                          (optionA?.label ?? "")
+                            .toLowerCase()
+                            .localeCompare((optionB?.label ?? "").toLowerCase())
+                        }
+                        options={customers}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className={style.newCustomer}>
-                  <Button
-                    onClick={() => setIsModalOpenCustomer(true)}
-                    type="primary"
-                  >
-                    បង្កើតអតិថិជនថ្មី
-                  </Button>
-                </div>
-              </div>
-              <div className={style.productDetail}>
-                <div className={style.productDetailWrapper}>
-                  <div className={style.detailContailer}>
-                    <div className={style.inforProduct}>បាកូដទំនិញ:</div>
-                    <Input
-                      ref={inputNumberRef}
-                      value={item.unit_code}
-                      className={style.inputAnt}
-                      placeholder="បាកូដទំនិញ"
-                      onPressEnter={handleKeyPress}
-                    />
-                  </div>
-                  <div className={style.detailContailer}>
-                    <div className={style.inforProduct}>ឈ្មោះទំនិញ:</div>
-                    <Input
-                      value={item.name}
-                      className={style.inputAnt}
-                      placeholder="ឈ្មោះទំនិញ"
-                    />
-                  </div>
-                  <div className={style.detailContailer}>
-                    <div className={style.inforProduct}>តម្លៃទំនិញ:</div>
-                    <InputNumberFloat
-                      value={item.price}
-                      onChange={(e) =>
-                        setItem({ ...item, price: e.target.value })
-                      }
-                      className={style.inputAnt}
-                      placeholder="តម្លៃទំនិញ"
-                      onPressEnter={handleKeyPress}
-                    />
-                  </div>
-                  <div className={style.detailContailer}>
-                    <div className={style.inforProduct}>ចំនួនទិញ:</div>
-                    <InputNumber
-                      value={item.quantity}
-                      onChange={(e) =>
-                        setItem({ ...item, quantity: e.target.value })
-                      }
-                      className={style.inputAnt}
-                      placeholder="ចំនួនទិញ"
-                      onPressEnter={handleKeyPress}
-                    />
-                  </div>
-                  <div className={style.detailContailer}>
-                    <div className={style.inforProduct}></div>
-                    <Radio.Group value={item.cashType} style={radioStyle}>
-                      <Radio value="riel">៛</Radio>
-                      <Radio value="dollar">$</Radio>
-                    </Radio.Group>
-                    <Button onClick={() => handleAddItems()} type="primary">
-                      បញ្ចូល
-                    </Button>
-                  </div>
-                </div>
-              </div>
-              <div className={style.addTable}>
-                <SaleTable
-                  saleItems={saleItems}
-                  handleDeleteItems={handleDeleteItems}
-                  handleEditItems={handleEditItems}
-                />
-              </div>
-              <div className={style.payWrapper}>
-                <div className={style.payInfo}>
-                  <div>
-                    អត្រាប្តូរប្រាក់:{" "}
-                    <span style={{ color: "blue" }}>1$ = {exchangeRate}៛</span>
-                  </div>
-                  <div className={style.total}>
-                    ប្រាក់សរុប:
-                    <Input
-                      value={totalRielTrimmed()}
-                      style={{ width: "100px" }}
-                      placeholder="ប្រាក់សរុប៛"
-                    />
-                    ៛
-                  </div>
-                  <div className={style.total}>
-                    ប្រាក់សរុប:
-                    <Input
-                      value={totalDollarTrimmed()}
-                      style={{ width: "100px" }}
-                      placeholder="ប្រាក់សរុប$"
-                    />
-                    $
-                  </div>
-                </div>
-                <div className={style.payInfo}>
-                  <div className={style.description}>
-                    <div className={style.subDes}>ពិពណ៌នាការទិញ:</div>
-                    <Input
-                      value={items.description}
-                      onChange={(e) => {
-                        setItems({ ...items, description: e.target.value });
-                      }}
-                      placeholder="ពិពណ៌នាការទិញ"
-                    />
-                  </div>
-                  <Checkbox onChange={onChange} checked={items.debt}>
-                    <div className={style.checkboxFont}>ជំពាក់</div>
-                  </Checkbox>
-                  <div className={style.total}>
-                    ប្រាក់កក់មុន:
-                    <InputNumberFloat
-                      value={items.deposit}
-                      onChange={(e) => {
-                        setItems({ ...items, deposit: e.target.value });
-                      }}
-                      style={{ width: "100px" }}
-                      placeholder="ប្រាក់កក់$"
-                    />
-                    $
-                  </div>
-                </div>
-                <div className={style.payInfoPrint}>
-                  <div className={style.btnPrint}>
+                  <div className={style.newCustomer}>
                     <Button
-                      onClick={() => handleCreateInvoice()}
+                      onClick={() => setIsModalOpenCustomer(true)}
                       type="primary"
                     >
-                      រក្សាទុក
+                      បង្កើតអតិថិជនថ្មី
                     </Button>
-                    <Button type="primary">Print receipt</Button>
-                    <Button type="primary">Print invoice</Button>
+                  </div>
+                </div>
+                <div className={style.productDetail}>
+                  <div className={style.productDetailWrapper}>
+                    <div className={style.detailContailer}>
+                      <div className={style.inforProduct}>បាកូដទំនិញ:</div>
+                      <Input
+                        ref={inputNumberRef}
+                        value={item.unit_code}
+                        className={style.inputAnt}
+                        placeholder="បាកូដទំនិញ"
+                        onPressEnter={handleKeyPress}
+                      />
+                    </div>
+                    <div className={style.detailContailer}>
+                      <div className={style.inforProduct}>ឈ្មោះទំនិញ:</div>
+                      <Input
+                        value={item.name}
+                        className={style.inputAnt}
+                        placeholder="ឈ្មោះទំនិញ"
+                      />
+                    </div>
+                    <div className={style.detailContailer}>
+                      <div className={style.inforProduct}>តម្លៃទំនិញ:</div>
+                      <InputNumberFloat
+                        value={item.price}
+                        onChange={(e) =>
+                          setItem({ ...item, price: e.target.value })
+                        }
+                        className={style.inputAnt}
+                        placeholder="តម្លៃទំនិញ"
+                        onPressEnter={handleKeyPress}
+                      />
+                    </div>
+                    <div className={style.detailContailer}>
+                      <div className={style.inforProduct}>ចំនួនទិញ:</div>
+                      <InputNumber
+                        value={item.quantity}
+                        onChange={(e) =>
+                          setItem({ ...item, quantity: e.target.value })
+                        }
+                        className={style.inputAnt}
+                        placeholder="ចំនួនទិញ"
+                        onPressEnter={handleKeyPress}
+                      />
+                    </div>
+                    <div className={style.detailContailer}>
+                      <div className={style.inforProduct}></div>
+                      <Radio.Group value={item.cashType} style={radioStyle}>
+                        <Radio value="riel">៛</Radio>
+                        <Radio value="dollar">$</Radio>
+                      </Radio.Group>
+                      <Button onClick={() => handleAddItems()} type="primary">
+                        បញ្ចូល
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                <div className={style.addTable}>
+                  <SaleTable
+                    saleItems={saleItems}
+                    handleDeleteItems={handleDeleteItems}
+                    handleEditItems={handleEditItems}
+                  />
+                </div>
+                <div className={style.payWrapper}>
+                  <div className={style.payInfo}>
+                    <div>
+                      អត្រាប្តូរប្រាក់:{" "}
+                      <span style={{ color: "blue" }}>
+                        1$ = {exchangeRate}៛
+                      </span>
+                    </div>
+                    <div className={style.total}>
+                      ប្រាក់សរុប:
+                      <Input
+                        value={totalRielTrimmed()}
+                        style={{ width: "100px" }}
+                        placeholder="ប្រាក់សរុប៛"
+                      />
+                      ៛
+                    </div>
+                    <div className={style.total}>
+                      ប្រាក់សរុប:
+                      <Input
+                        value={totalDollarTrimmed()}
+                        style={{ width: "100px" }}
+                        placeholder="ប្រាក់សរុប$"
+                      />
+                      $
+                    </div>
+                  </div>
+                  <div className={style.payInfo}>
+                    <div className={style.description}>
+                      <div className={style.subDes}>ពិពណ៌នាការទិញ:</div>
+                      <Input
+                        value={items.description}
+                        onChange={(e) => {
+                          setItems({ ...items, description: e.target.value });
+                        }}
+                        placeholder="ពិពណ៌នាការទិញ"
+                      />
+                    </div>
+                    <Checkbox onChange={onChange} checked={items.debt}>
+                      <div className={style.checkboxFont}>ជំពាក់</div>
+                    </Checkbox>
+                    <div className={style.total}>
+                      ប្រាក់កក់មុន:
+                      <InputNumberFloat
+                        value={items.deposit}
+                        onChange={(e) => {
+                          setItems({ ...items, deposit: e.target.value });
+                        }}
+                        style={{ width: "100px" }}
+                        placeholder="ប្រាក់កក់$"
+                      />
+                      $
+                    </div>
+                  </div>
+                  <div className={style.payInfoPrint}>
+                    <div className={style.btnPrint}>
+                      <Button
+                        onClick={() => handleCreateInvoice()}
+                        type="primary"
+                      >
+                        រក្សាទុក
+                      </Button>
+                      <Button onClick={() => setPrint(true)} type="primary">
+                        Print receipt
+                      </Button>
+                      <Button type="primary">Print invoice</Button>
+                    </div>
                   </div>
                 </div>
               </div>
+              <div className={style.productSide}>
+                <ListCategory
+                  categories={categories}
+                  handleSearchByCategory={handleSearchByCategory}
+                />
+                <ListProduct
+                  products={filteredProducts}
+                  getProduct={getProduct}
+                />
+              </div>
             </div>
-            <div className={style.productSide}>
-              <ListCategory
-                categories={categories}
-                handleSearchByCategory={handleSearchByCategory}
-              />
-              <ListProduct
-                products={filteredProducts}
-                getProduct={getProduct}
-              />
-            </div>
-          </div>
-          <CreaeteCustomerModal
-            isModalOpenCustomer={isModalOpenCustomer}
-            handleCancelFormCustomer={handleCancelFormCustomer}
-            handleSubmitCustomer={handleSubmitCustomer}
-            customerForm={customerForm}
-            setCustomerForm={setCustomerForm}
-          />
-        </main>
+            <CreaeteCustomerModal
+              isModalOpenCustomer={isModalOpenCustomer}
+              handleCancelFormCustomer={handleCancelFormCustomer}
+              handleSubmitCustomer={handleSubmitCustomer}
+              customerForm={customerForm}
+              setCustomerForm={setCustomerForm}
+            />
+          </main>
+        )}
       </Spin>
     </>
   );
 };
-
 export default SalePage;
