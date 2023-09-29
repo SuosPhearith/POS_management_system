@@ -3,7 +3,13 @@ import { Table, Button, Space, Popconfirm } from "antd";
 import { DeleteFilled, EditFilled } from "@ant-design/icons";
 import ImageWithCover from "../usefull/ImageWithCover";
 
-const CustomerTable = ({ customers, handleUpdate, handleDelete }) => {
+const CustomerTable = ({
+  customers,
+  handleUpdate,
+  handleDelete,
+  totalCustomer,
+  setPage,
+}) => {
   const columns = [
     {
       title: "ល.រ",
@@ -96,9 +102,16 @@ const CustomerTable = ({ customers, handleUpdate, handleDelete }) => {
     <Table
       columns={columns}
       dataSource={data}
-      pagination={false}
       scroll={{
-        y: "64vh",
+        y: "55vh",
+      }}
+      pagination={{
+        total: totalCustomer,
+        pageSize: 20,
+        showSizeChanger: false,
+        onChange: (page) => {
+          setPage(page);
+        },
       }}
       footer={() => (
         <div style={footerStyle}>

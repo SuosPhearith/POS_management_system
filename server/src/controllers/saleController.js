@@ -6,11 +6,24 @@ const asyncHandler = require("express-async-handler");
 const getList = asyncHandler(async (req, res, next) => {
   try {
     // const getListinvoices = "select * from invoices";
+    const pagination = process.env.PAGINATION_VALUE * 1;
+    const search = req.query.search ? req.query.search : "";
+    const currentPage = req.query.page >= 1 ? req.query.page : 1;
+    const offset = (currentPage - 1) * pagination;
+    let querySearch = "";
+    if (search !== "") {
+      querySearch = `where i.id = '${search}' or c.name LIKE '%${search}%'`;
+    }
     const getListinvoices =
-      "select i.id, i.description, i.customer_id, i.payment_type_id, c.name as customer_name, i.saleType, p.name as payment_name, i.products_khmer_currency, i.products_USD_currency, i.total_amount_USD, i.total_amount_khmer, i.debt, i.deposit, i.created_date, i.updated_date, u.fullname as user_fullname from invoices as i join customers as c on i.customer_id = c.id join paymenttypes as p on i.payment_type_id = p.id join users as u on i.user_id = u.id order by i.id DESC";
-    const getList = await executeQuery(getListinvoices);
+      "SELECT i.id, i.description, i.customer_id, i.payment_type_id, c.name AS customer_name, i.saleType, p.name AS payment_name, i.products_khmer_currency, i.products_USD_currency, i.total_amount_USD, i.total_amount_khmer, i.debt, i.deposit, i.created_date, i.updated_date, u.fullname AS user_fullname FROM invoices AS i JOIN customers AS c ON i.customer_id = c.id JOIN paymenttypes AS p ON i.payment_type_id = p.id JOIN users AS u ON i.user_id = u.id " +
+      querySearch +
+      " ORDER BY i.id DESC LIMIT ?, ?"; // Move the LIMIT clause to this position
+    const getList = await executeQuery(getListinvoices, [offset, pagination]);
+    const getListTotal = "select count(id) as total_row from invoices";
+    const total = await executeQuery(getListTotal);
     res.json({
       invoices: getList,
+      total_row: total,
     });
   } catch (error) {
     next(error);
@@ -18,12 +31,25 @@ const getList = asyncHandler(async (req, res, next) => {
 });
 const getListPayall = asyncHandler(async (req, res, next) => {
   try {
-    // const getListinvoices = "select * from invoices";
+    const pagination = process.env.PAGINATION_VALUE * 1;
+    const search = req.query.search ? req.query.search : "";
+    const currentPage = req.query.page >= 1 ? req.query.page : 1;
+    const offset = (currentPage - 1) * pagination;
+    let querySearch = "";
+    if (search !== "") {
+      querySearch = `and i.id = '${search}'`;
+    }
     const getListinvoices =
-      "select i.id, i.description, i.customer_id, i.payment_type_id, c.name as customer_name, i.saleType, p.name as payment_name, i.products_khmer_currency, i.products_USD_currency, i.total_amount_USD, i.total_amount_khmer, i.debt, i.deposit, i.created_date, i.updated_date, u.fullname as user_fullname from invoices as i join customers as c on i.customer_id = c.id join paymenttypes as p on i.payment_type_id = p.id join users as u on i.user_id = u.id where i.debt = 0 order by i.id DESC";
-    const getList = await executeQuery(getListinvoices);
+      "select i.id, i.description, i.customer_id, i.payment_type_id, c.name as customer_name, i.saleType, p.name as payment_name, i.products_khmer_currency, i.products_USD_currency, i.total_amount_USD, i.total_amount_khmer, i.debt, i.deposit, i.created_date, i.updated_date, u.fullname as user_fullname from invoices as i join customers as c on i.customer_id = c.id join paymenttypes as p on i.payment_type_id = p.id join users as u on i.user_id = u.id where i.debt = 0 " +
+      querySearch +
+      " order by i.id DESC limit ?, ?"; // Move the LIMIT clause to this position
+    const getList = await executeQuery(getListinvoices, [offset, pagination]);
+    const getListTotal =
+      "select count(id) as total_row from invoices where debt = 0";
+    const total_row = await executeQuery(getListTotal);
     res.json({
       invoices: getList,
+      total_row: total_row,
     });
   } catch (error) {
     next(error);
@@ -46,11 +72,25 @@ const getListDetail = asyncHandler(async (req, res, next) => {
 
 const getListDebt = asyncHandler(async (req, res, next) => {
   try {
+    const pagination = process.env.PAGINATION_VALUE * 1;
+    const search = req.query.search ? req.query.search : "";
+    const currentPage = req.query.page >= 1 ? req.query.page : 1;
+    const offset = (currentPage - 1) * pagination;
+    let querySearch = "";
+    if (search !== "") {
+      querySearch = `and i.id = '${search}'`;
+    }
     const getListinvoices =
-      "select i.id, i.description, i.customer_id, i.payment_type_id, c.name as customer_name, i.saleType, p.name as payment_name, i.products_khmer_currency, i.products_USD_currency, i.total_amount_USD, i.total_amount_khmer, i.debt, i.deposit, i.created_date, i.updated_date, u.fullname as user_fullname from invoices as i join customers as c on i.customer_id = c.id join paymenttypes as p on i.payment_type_id = p.id join users as u on i.user_id = u.id where i.debt > 0 order by i.id DESC";
-    const getList = await executeQuery(getListinvoices);
+      "select i.id, i.description, i.customer_id, i.payment_type_id, c.name as customer_name, i.saleType, p.name as payment_name, i.products_khmer_currency, i.products_USD_currency, i.total_amount_USD, i.total_amount_khmer, i.debt, i.deposit, i.created_date, i.updated_date, u.fullname as user_fullname from invoices as i join customers as c on i.customer_id = c.id join paymenttypes as p on i.payment_type_id = p.id join users as u on i.user_id = u.id where i.debt > 0  " +
+      querySearch +
+      " order by i.created_date ASC limit ?, ?"; // Move the LIMIT clause to this position
+    const getList = await executeQuery(getListinvoices, [offset, pagination]);
+    const getListTotal =
+      "select count(id) as total_row from invoices where debt > 0";
+    const total_row = await executeQuery(getListTotal);
     res.json({
       invoices: getList,
+      total_row: total_row,
     });
   } catch (error) {
     next(error);
@@ -59,11 +99,25 @@ const getListDebt = asyncHandler(async (req, res, next) => {
 
 const getListDebtLate = asyncHandler(async (req, res, next) => {
   try {
+    const pagination = process.env.PAGINATION_VALUE * 1;
+    const search = req.query.search ? req.query.search : "";
+    const currentPage = req.query.page >= 1 ? req.query.page : 1;
+    const offset = (currentPage - 1) * pagination;
+    let querySearch = "";
+    if (search !== "") {
+      querySearch = `and i.id = '${search}'`;
+    }
     const getListinvoices =
-      "select i.id, i.description, i.customer_id, i.payment_type_id, c.name as customer_name, i.saleType, p.name as payment_name, i.products_khmer_currency, i.products_USD_currency, i.total_amount_USD, i.total_amount_khmer, i.debt, i.deposit, i.created_date, i.updated_date, u.fullname as user_fullname from invoices as i join customers as c on i.customer_id = c.id join paymenttypes as p on i.payment_type_id = p.id join users as u on i.user_id = u.id where i.created_date < DATE_SUB(NOW(), INTERVAL 1 WEEK) and i.debt > 0 order by i.id DESC";
-    const getList = await executeQuery(getListinvoices);
+      "select i.id, i.description, i.customer_id, i.payment_type_id, c.name as customer_name, i.saleType, p.name as payment_name, i.products_khmer_currency, i.products_USD_currency, i.total_amount_USD, i.total_amount_khmer, i.debt, i.deposit, i.created_date, i.updated_date, u.fullname as user_fullname from invoices as i join customers as c on i.customer_id = c.id join paymenttypes as p on i.payment_type_id = p.id join users as u on i.user_id = u.id where i.created_date < DATE_SUB(NOW(), INTERVAL 1 WEEK) and i.debt > 0 " +
+      querySearch +
+      " order by i.created_date ASC limit ?, ?"; // Move the LIMIT clause to this position
+    const getList = await executeQuery(getListinvoices, [offset, pagination]);
+    const getListTotal =
+      "select count(id) as total_row from invoices where created_date < DATE_SUB(NOW(), INTERVAL 1 WEEK) and debt > 0";
+    const total_row = await executeQuery(getListTotal);
     res.json({
       invoices: getList,
+      total_row: total_row,
     });
   } catch (error) {
     next(error);
@@ -204,8 +258,9 @@ const create = asyncHandler(async (req, res, next) => {
     // Insert into two table at once if query 1 success but query 2 not success is not commit all
     await connection.beginTransaction();
     // Insert into invoices
-    let created_date = new Date().toISOString();
-    let updated_date = new Date().toISOString();
+
+    let created_date = currentDate();
+    let updated_date = currentDate();
     const queryInvoice =
       "insert into invoices (customer_id, saleType, payment_type_id, products_khmer_currency, products_USD_currency, total_amount_USD, total_amount_khmer, debt, deposit, created_date, updated_date, user_id, description) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
     const queryInvoiceValue = [
@@ -327,7 +382,7 @@ const update = asyncHandler(async (req, res, next) => {
       depositValue,
       newTotalUSD,
       description,
-      currentDate,
+      currentDate(),
       id,
     ]);
     if (update.affectedRows > 0) {

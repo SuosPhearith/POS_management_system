@@ -34,6 +34,22 @@ const Invoice = ({ handlePrintInvoice, handleCancelPrint }) => {
           <div className="container-fluit">
             {/* Your existing JSX code here */}
             <div className="container-fluit">
+              <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-end">
+                <button
+                  onClick={() => handlePrintInvoice()}
+                  className="btn btn-light text-capitalize border-0 hide-on-print"
+                  data-mdb-ripple-color="dark"
+                >
+                  <i className="fas fa-print text-primary"></i> Print
+                </button>
+                <button
+                  onClick={() => handleCancelPrint()}
+                  className="btn btn-light text-capitalize hide-on-print"
+                  data-mdb-ripple-color="dark"
+                >
+                  <i className="far fa-file-pdf text-danger"></i> Back
+                </button>
+              </div>
               <div className="row">
                 <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 d-flex justify-content-center align-items-center">
                   <p
@@ -66,7 +82,7 @@ const Invoice = ({ handlePrintInvoice, handleCancelPrint }) => {
                           ID វិក្កយបត្រ: I-{dataForPrint[0].invoice_id}
                         </span>
                       </li>
-                      <li className="text-muted">
+                      <li className="text-muted text-center">
                         <i
                           className="fas fa-circle"
                           style={{ color: "#84B0CA" }}
@@ -172,22 +188,6 @@ const Invoice = ({ handlePrintInvoice, handleCancelPrint }) => {
                 <hr />
                 <div className="d-flex justify-content-center">
                   {"-->Thank you!<--"}
-                </div>
-                <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-end">
-                  <button
-                    onClick={() => handlePrintInvoice()}
-                    className="btn btn-light text-capitalize border-0 hide-on-print"
-                    data-mdb-ripple-color="dark"
-                  >
-                    <i className="fas fa-print text-primary"></i> Print
-                  </button>
-                  <button
-                    onClick={() => handleCancelPrint()}
-                    className="btn btn-light text-capitalize hide-on-print"
-                    data-mdb-ripple-color="dark"
-                  >
-                    <i className="far fa-file-pdf text-danger"></i> Back
-                  </button>
                 </div>
               </div>
             </div>

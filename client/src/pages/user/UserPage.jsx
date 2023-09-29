@@ -89,7 +89,6 @@ const UserPage = () => {
       formData.append("contact", contact);
       formData.append("role", role);
       formData.append("file", file);
-      console.log(formData);
       const response = await request("PUT", `users/update/${id}`, formData);
       message.success(response.message);
       handleClear();

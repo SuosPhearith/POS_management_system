@@ -312,7 +312,7 @@ const SalePage = () => {
 
       let totalKhmer = totalRiel + totalDollar * exchangeRate;
       let totalUsa = totalDollar + totalRiel / exchangeRate;
-      const roundedNumber = totalUsa.toFixed(2);
+      let roundedNumber = totalUsa.toFixed(2);
       setTotalDollar(roundedNumber);
       setTotalRiel(totalKhmer);
     };
@@ -367,6 +367,8 @@ const SalePage = () => {
   // end of add items
 
   // creaate invoice
+  console.log(typeof totalDollar);
+  console.log(typeof items.deposit);
   const handleCreateInvoice = async () => {
     if (validateCreateInvoice()) return;
     try {
@@ -377,7 +379,7 @@ const SalePage = () => {
         payment_type_id: items.payment_type_id,
         saleType: items.saleType,
         debt: items.debt,
-        deposit: items.deposit,
+        deposit: items.deposit * 1,
         description: items.description,
         products: saleItems,
       };
@@ -435,7 +437,7 @@ const SalePage = () => {
       message.error("សូមបញ្ចូលប្រភេទលក់!");
       return true;
     }
-    if (items.deposit > totalDollar) {
+    if (items.deposit * 1 > totalDollar * 1) {
       message.error("សូមបញ្ចូលប្រាក់កក់អោយបាបត្រឹមត្រូវ!");
       return true;
     }

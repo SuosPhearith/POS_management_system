@@ -4,7 +4,12 @@ import { DeleteFilled } from "@ant-design/icons";
 import dateConverter from "../../utils/DateConverter";
 import "./ReceiveProduct.css";
 
-const ReceiveProductTable = ({ receiveProducts, handleDelete }) => {
+const ReceiveProductTable = ({
+  receiveProducts,
+  handleDelete,
+  totalReceiveproduct,
+  setPage,
+}) => {
   const footerStyle = {
     fontFamily: "Khmer OS Content, sans-serif",
     height: "40px",
@@ -135,9 +140,16 @@ const ReceiveProductTable = ({ receiveProducts, handleDelete }) => {
     <Table
       columns={columns}
       dataSource={data}
-      pagination={false}
       scroll={{
-        y: "64vh",
+        y: "55vh",
+      }}
+      pagination={{
+        total: totalReceiveproduct,
+        pageSize: 20,
+        showSizeChanger: false,
+        onChange: (page) => {
+          setPage(page);
+        },
       }}
       footer={() => (
         <div style={footerStyle}>

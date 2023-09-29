@@ -14,6 +14,8 @@ const CategoryTable = ({
   handleDetail,
   invoiceType,
   handlePrint,
+  totalInvoice,
+  setPage,
 }) => {
   const tableType = () => {
     if (invoiceType === "all") {
@@ -235,10 +237,18 @@ const CategoryTable = ({
     <Table
       columns={columns}
       dataSource={data}
-      pagination={false}
+      // pagination={false}
       scroll={{
         x: 1200,
-        y: "64vh",
+        y: "55vh",
+      }}
+      pagination={{
+        total: totalInvoice,
+        pageSize: 20,
+        showSizeChanger: false,
+        onChange: (page) => {
+          setPage(page);
+        },
       }}
       footer={() => (
         <div style={footerStyle}>

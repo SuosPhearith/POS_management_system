@@ -48,41 +48,57 @@ const SupplierModal = ({
         cancelText="បោះបង់"
       >
         <Space style={spaceStyle} direction="vertical">
-          <Input
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            onPressEnter={handleKeyPress}
-            style={inputStyle}
-            placeholder="កូដ"
-          />
-          <Input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            onPressEnter={handleKeyPress}
-            style={inputStyle}
-            placeholder="ឈ្មោះ"
-          />
-          <Input
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
-            onPressEnter={handleKeyPress}
-            style={inputStyle}
-            placeholder="លេខទំនាក់ទំនង"
-          />
-          <Input
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            onPressEnter={handleKeyPress}
-            style={inputStyle}
-            placeholder="អាសយដ្ឋាន"
-          />
-          <Input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            onPressEnter={handleKeyPress}
-            style={inputStyle}
-            placeholder="អ៊ីមែល ឬ លេខទូរស័ព្ទ"
-          />
+          <label style={{ width: "100%" }}>
+            <span style={{ color: "blue" }}>*កូដ</span>
+            <Input
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              onPressEnter={handleKeyPress}
+              style={inputStyle}
+              placeholder="កូដ"
+            />
+          </label>
+          <label style={{ width: "100%" }}>
+            <span style={{ color: "blue" }}>*ឈ្មោះ</span>
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              onPressEnter={handleKeyPress}
+              style={inputStyle}
+              placeholder="ឈ្មោះ"
+            />
+          </label>
+          <label style={{ width: "100%" }}>
+            <span style={{ color: "blue" }}>*លេខទំនាក់ទំនង</span>
+            <Input
+              value={contact}
+              onChange={(e) => setContact(e.target.value)}
+              onPressEnter={handleKeyPress}
+              style={inputStyle}
+              placeholder="លេខទំនាក់ទំនង"
+            />
+          </label>
+          <label style={{ width: "100%" }}>
+            <span style={{ color: "blue" }}>*អាសយដ្ឋាន</span>
+            <Input
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              onPressEnter={handleKeyPress}
+              style={inputStyle}
+              placeholder="អាសយដ្ឋាន"
+            />
+          </label>
+          <label style={{ width: "100%" }}>
+            <span style={{ color: "blue" }}>*អ៊ីមែល ឬ លេខទូរស័ព្ទ</span>
+            <Input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onPressEnter={handleKeyPress}
+              style={inputStyle}
+              placeholder="អ៊ីមែល ឬ លេខទូរស័ព្ទ"
+            />
+          </label>
+
           <Upload
             accept="image/*"
             showUploadList={false}

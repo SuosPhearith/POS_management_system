@@ -11,6 +11,8 @@ import Search from "../../components/search/Search";
 import { adminLayoutContext } from "../../layouts/admin/AdminLayout";
 import InvoicePrint from "../../components/print/InvoicePrint";
 const InvoicePage = () => {
+  const [page, setPage] = useState(0);
+  const [totalInvoice, setTotalInvoice] = useState(0);
   const { print, setPrint } = useContext(adminLayoutContext);
   const [invoiceType, setInvoiceType] = useState("all");
   const [invoices, setInvoices] = useState([]);
@@ -46,22 +48,34 @@ const InvoicePage = () => {
       let response;
       switch (type) {
         case "all":
-          response = await request("GET", "sales/getList");
+          response = await request(
+            "GET",
+            `sales/getList?page=${page}&search=${searchQuery}`
+          );
           break;
         case "debt":
-          response = await request("GET", "sales/getListDebt");
+          response = await request(
+            "GET",
+            `sales/getListDebt?page=${page}&search=${searchQuery}`
+          );
           break;
         case "debtLate":
-          response = await request("GET", "sales/getListDebtLate");
+          response = await request(
+            "GET",
+            `sales/getListDebtLate?page=${page}&search=${searchQuery}`
+          );
           break;
         case "payAll":
-          response = await request("GET", "sales/getListPayAll");
+          response = await request(
+            "GET",
+            `sales/getListPayAll?page=${page}&search=${searchQuery}`
+          );
           break;
         default:
-          message.error("មិនមានវិកាយប័ត្រ!");
           return;
       }
       setInvoices(response.invoices);
+      setTotalInvoice(response.total_row[0].total_row);
     } catch (error) {
       errorHandler(error);
     } finally {
@@ -70,7 +84,8 @@ const InvoicePage = () => {
   };
   useEffect(() => {
     getList(invoiceType);
-  }, [invoiceType]);
+    // eslint-disable-next-line
+  }, [invoiceType, page, searchQuery]);
   // update function
   const updateCategory = async () => {
     if (validateError()) return;
@@ -276,15 +291,6 @@ const InvoicePage = () => {
     setSearchQuery(value);
   };
 
-  // Filter invoices based on search query
-  const filteredInvoices = invoices.filter((invoice) => {
-    const invoiceId = String(invoice.id);
-    return (
-      invoice.customer_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      invoice.created_date.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      invoiceId.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  });
   // function get list print
   const getListPrint = async (id) => {
     try {
@@ -355,13 +361,15 @@ const InvoicePage = () => {
               </div>
             </div>
             <InvoiceTable
-              invoices={filteredInvoices}
+              invoices={invoices}
               handleUpdate={handleUpdate}
               handleDelete={handleDelete}
               handlePayback={handlePayback}
               handleDetail={handleDetail}
               invoiceType={invoiceType}
               handlePrint={handlePrint}
+              totalInvoice={totalInvoice}
+              setPage={setPage}
             />
             <InvoiceModal
               isModalOpen={isModalOpen}

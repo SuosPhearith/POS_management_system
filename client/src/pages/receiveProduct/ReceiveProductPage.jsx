@@ -10,16 +10,23 @@ const ReceiveProductPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [receiveProducts, setReceiveProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [totalReceiveproduct, setTotalReceiveproduct] = useState(0);
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
     getList();
-  }, []);
+    // eslint-disable-next-line
+  }, [searchQuery, page]);
 
   const getList = async () => {
     try {
       setLoading(true);
-      const response = await request("GET", "receiveproducts/getList");
+      const response = await request(
+        "GET",
+        `receiveProducts/getList?page=${page}&search=${searchQuery}`
+      );
       setReceiveProducts(response.receiveproducts);
+      setTotalReceiveproduct(response.total_row[0].total_row);
     } catch (error) {
       errroHandler(error);
     } finally {
@@ -46,18 +53,6 @@ const ReceiveProductPage = () => {
     const { value } = e.target;
     setSearchQuery(value);
   };
-
-  // Filter users based on search query
-  const filteredUsers = receiveProducts.filter((receiveProduct) => {
-    const productId = String(receiveProduct.product_id);
-    const userId = String(receiveProduct.user_id);
-    const supplierId = String(receiveProduct.supplier_id);
-    return (
-      productId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      userId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      supplierId.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  });
   return (
     <Spin spinning={loading}>
       <main className={style.main}>
@@ -70,8 +65,10 @@ const ReceiveProductPage = () => {
         </div>
         <div>
           <ReceiveProductTable
-            receiveProducts={filteredUsers}
+            receiveProducts={receiveProducts}
             handleDelete={handleDelete}
+            totalReceiveproduct={totalReceiveproduct}
+            setPage={setPage}
           />
         </div>
       </main>

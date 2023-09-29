@@ -19,17 +19,24 @@ const CustomerPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(0);
+  const [totalCustomer, setTotalCustomer] = useState(0);
 
   useEffect(() => {
     getList();
-  }, []);
+    // eslint-disable-next-line
+  }, [searchQuery]);
 
   // GetList function
   const getList = async () => {
     try {
       setLoading(true);
-      const response = await request("GET", "customers/getList");
+      const response = await request(
+        "GET",
+        `customers/getList?page=${page}&search=${searchQuery}`
+      );
       setCustomers(response.customers);
+      setTotalCustomer(response.total_row[0].total_row);
     } catch (error) {
       errroHandler(error);
     } finally {
@@ -129,13 +136,6 @@ const CustomerPage = () => {
     setSearchQuery(value);
   };
 
-  // Filter users based on search query
-  const filteredUsers = customers.filter(
-    (custmer) =>
-      custmer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      custmer.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   const validateError = () => {
     if (!form.name || form.name.length < 3) {
       message.error("សូមបញ្ចូលឈ្មោះប្រភេទទំនិញយ៉ាងតិច៣អក្សរ!");
@@ -162,9 +162,11 @@ const CustomerPage = () => {
         </div>
         <div>
           <CustomerTable
-            customers={filteredUsers}
+            customers={customers}
             handleUpdate={handleUpdate}
             handleDelete={deleteCategory}
+            totalCustomer={totalCustomer}
+            setPage={setPage}
           />
         </div>
       </main>

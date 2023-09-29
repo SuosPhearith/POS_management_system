@@ -38,27 +38,37 @@ const CustomerModal = ({
         cancelText="បោះបង់"
       >
         <Space style={spaceStyle} direction="vertical">
-          <Input
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-            onPressEnter={handleKeyPress}
-            style={inputStyle}
-            placeholder="ឈ្មោះ"
-          />
-          <Input
-            value={form.contact}
-            onChange={(e) => setForm({ ...form, contact: e.target.value })}
-            onPressEnter={handleKeyPress}
-            style={inputStyle}
-            placeholder="លេខទំនាក់ទំនង"
-          />
-          <Input
-            value={form.address}
-            onChange={(e) => setForm({ ...form, address: e.target.value })}
-            onPressEnter={handleKeyPress}
-            style={inputStyle}
-            placeholder="អាសយដ្ឋាន"
-          />
+          <label style={{ width: "100%" }}>
+            <span style={{ color: "blue" }}>*ឈ្មោះ</span>
+            <Input
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              onPressEnter={handleKeyPress}
+              style={inputStyle}
+              placeholder="ឈ្មោះ"
+            />
+          </label>
+          <label style={{ width: "100%" }}>
+            <span style={{ color: "blue" }}>*លេខទំនាក់ទំនង</span>
+            <Input
+              value={form.contact}
+              onChange={(e) => setForm({ ...form, contact: e.target.value })}
+              onPressEnter={handleKeyPress}
+              style={inputStyle}
+              placeholder="លេខទំនាក់ទំនង"
+            />
+          </label>
+          <label style={{ width: "100%" }}>
+            <span style={{ color: "blue" }}>*អាសយដ្ឋាន</span>
+            <Input
+              value={form.address}
+              onChange={(e) => setForm({ ...form, address: e.target.value })}
+              onPressEnter={handleKeyPress}
+              style={inputStyle}
+              placeholder="អាសយដ្ឋាន"
+            />
+          </label>
+
           <Upload
             accept="image/*"
             showUploadList={false}

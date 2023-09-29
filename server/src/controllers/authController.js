@@ -4,7 +4,6 @@ const db = require("../config/db");
 const executeQuery = db.executeQuery;
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
-const currentDate = require("../utils/currentDate");
 
 const login = asyncHandler(async (req, res, next) => {
   try {

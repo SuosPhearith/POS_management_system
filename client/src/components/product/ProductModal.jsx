@@ -100,9 +100,10 @@ const ProuductModal = ({
           okText={form.id === "" ? "បង្កើត" : "កែប្រែ"}
           cancelText="បោះបង់"
         >
-          <form>
-            <Space style={spaceStyle} direction="vertical" size={20}>
-              <Space>
+          <Space style={spaceStyle} direction="vertical" size={20}>
+            <Space>
+              <label>
+                <span style={{ color: "blue" }}>*ឈ្មោះ</span>
                 <Input
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -110,6 +111,9 @@ const ProuductModal = ({
                   style={inputStyle}
                   placeholder="ឈ្មោះ"
                 />
+              </label>
+              <label>
+                <span style={{ color: "blue" }}>*បាកូដដំ</span>
                 <Input
                   value={form.box_code}
                   onChange={(e) =>
@@ -119,6 +123,9 @@ const ProuductModal = ({
                   style={inputStyle}
                   placeholder="បាកូដដំ"
                 />
+              </label>
+              <label>
+                <span style={{ color: "blue" }}>*បាកូដរាយ</span>
                 <Input
                   value={form.unit_code}
                   onChange={(e) =>
@@ -128,8 +135,16 @@ const ProuductModal = ({
                   style={inputStyle}
                   placeholder="បាកូដរាយ"
                 />
-              </Space>
-              <Space style={{ width: "100%" }}>
+              </label>
+            </Space>
+            <Space style={{ width: "100%" }}>
+              <label
+                style={{
+                  display: "flex,",
+                  flexDirection: "column",
+                }}
+              >
+                <div style={{ color: "blue" }}>*ជ្រើសរើសប្រភេទទំនិញ</div>
                 <Select
                   value={findLabel()}
                   onChange={handleSelectChangeCategory}
@@ -147,7 +162,11 @@ const ProuductModal = ({
                   }
                   options={categories}
                 />
-                {form.id === "" && (
+              </label>
+
+              {form.id === "" && (
+                <label>
+                  <span style={{ color: "blue" }}>*ជ្រើសរើសអ្នកនាំចូល</span>
                   <Select
                     value={form.supplier_id}
                     onChange={handleSelectChangeSupplier}
@@ -165,18 +184,21 @@ const ProuductModal = ({
                     }
                     options={suppliers}
                   />
-                )}
-              </Space>
-              <Radio.Group
-                value={form.cashType}
-                onChange={(e) => setForm({ ...form, cashType: e.target.value })}
-              >
-                <Radio value={"riel"}>លុយរៀល</Radio>
-                <Radio value={"dollar"}>លុយដុល្លា</Radio>
-              </Radio.Group>
-              <Space>
-                {form.id === "" && (
-                  <>
+                </label>
+              )}
+            </Space>
+            <Radio.Group
+              value={form.cashType}
+              onChange={(e) => setForm({ ...form, cashType: e.target.value })}
+            >
+              <Radio value={"riel"}>លុយរៀល</Radio>
+              <Radio value={"dollar"}>លុយដុល្លា</Radio>
+            </Radio.Group>
+            <Space>
+              {form.id === "" && (
+                <>
+                  <label>
+                    <span style={{ color: "blue" }}>*ចំនួនទិញចូលដំ</span>
                     <NumericInput
                       value={form.order_quantity}
                       onChange={(e) =>
@@ -186,6 +208,9 @@ const ProuductModal = ({
                       style={inputStyle}
                       placeholder="ចំនួនទិញចូលដំ"
                     />
+                  </label>
+                  <label>
+                    <span style={{ color: "blue" }}>*ចំនួនទំនិញក្នុងមួយដំ</span>
                     <NumericInput
                       value={form.unit_quantity}
                       onChange={(e) =>
@@ -195,8 +220,11 @@ const ProuductModal = ({
                       style={inputStyle}
                       placeholder="ចំនួនទំនិញក្នុងមួយដំ"
                     />
-                  </>
-                )}
+                  </label>
+                </>
+              )}
+              <label>
+                <span style={{ color: "blue" }}>*តម្លៃទិញចូលក្នុងមួយដំ</span>
                 <NumericInputFloat
                   value={form.purchase_price}
                   onChange={(e) =>
@@ -206,8 +234,11 @@ const ProuductModal = ({
                   style={inputStyle}
                   placeholder="តម្លៃទិញចូលក្នុងមួយដំ"
                 />
-              </Space>
-              <Space>
+              </label>
+            </Space>
+            <Space>
+              <label>
+                <span style={{ color: "blue" }}>*តម្លៃលក់ដំ</span>
                 <NumericInputFloat
                   value={form.product_price}
                   onChange={(e) =>
@@ -217,6 +248,9 @@ const ProuductModal = ({
                   style={inputStyle}
                   placeholder="តម្លៃលក់ដំ"
                 />
+              </label>
+              <label>
+                <span style={{ color: "blue" }}>*តម្លៃលក់រាយ</span>
                 <NumericInputFloat
                   value={form.unit_price}
                   onChange={(e) =>
@@ -226,6 +260,9 @@ const ProuductModal = ({
                   style={inputStyle}
                   placeholder="តម្លៃលក់រាយ"
                 />
+              </label>
+              <label>
+                <span style={{ color: "blue" }}>*តម្លៃលក់ពិសេស</span>
                 <NumericInputFloat
                   value={form.special_price}
                   onChange={(e) =>
@@ -235,6 +272,9 @@ const ProuductModal = ({
                   style={inputStyle}
                   placeholder="តម្លៃលក់ពិសេស"
                 />
+              </label>
+              <label>
+                <span style={{ color: "blue" }}>*ភាគរយបញ្ចុះតម្លៃ</span>
                 <NumericInputFloat
                   value={form.discount_per}
                   onChange={(e) =>
@@ -244,7 +284,10 @@ const ProuductModal = ({
                   style={inputStyle}
                   placeholder="ភាគរយបញ្ចុះតម្លៃ"
                 />
-              </Space>
+              </label>
+            </Space>
+            <label style={{ width: "100%" }}>
+              <span style={{ color: "blue" }}>*ការពិពណ៌នា</span>
               <Input.TextArea
                 value={form.description}
                 onChange={(e) =>
@@ -255,18 +298,19 @@ const ProuductModal = ({
                 placeholder="ការពិពណ៌នា"
                 autoSize={{ minRows: 3, maxRows: 5 }}
               />
-              <Upload
-                accept="image/*"
-                showUploadList={false}
-                customRequest={(e) => setForm({ ...form, file: e.file })}
-                maxCount={1}
-              >
-                <Button icon={<UploadOutlined />} type="primary">
-                  រូបភាព
-                </Button>
-              </Upload>
-            </Space>
-          </form>
+            </label>
+
+            <Upload
+              accept="image/*"
+              showUploadList={false}
+              customRequest={(e) => setForm({ ...form, file: e.file })}
+              maxCount={1}
+            >
+              <Button icon={<UploadOutlined />} type="primary">
+                រូបភាព
+              </Button>
+            </Upload>
+          </Space>
         </Modal>
       </Spin>
     </>

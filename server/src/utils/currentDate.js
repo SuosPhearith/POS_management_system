@@ -1,8 +1,12 @@
-const currentDate = new Date();
-const year = currentDate.getFullYear();
-const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-const day = String(currentDate.getDate()).padStart(2, '0');
+const getFormattedDateInCambodia = () => {
+  const currentDateInCambodia = new Date();
+  currentDateInCambodia.setUTCHours(currentDateInCambodia.getUTCHours() + 7); // Adjust to UTC+7
 
-const formattedDate = `${year}-${month}-${day}`;
-
-module.exports = formattedDate
+  // Format the `currentDateInCambodia` as a string in the DATETIME format (MySQL)
+  const formattedDate = currentDateInCambodia
+    .toISOString()
+    .slice(0, 19)
+    .replace("T", " ");
+  return formattedDate;
+};
+module.exports = getFormattedDateInCambodia;

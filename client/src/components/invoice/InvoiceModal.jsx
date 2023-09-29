@@ -108,7 +108,7 @@ const CategoryModal = ({
           cancelText="បោះបង់"
         >
           <Space style={spaceStyle} direction="vertical">
-            <label>
+            <label style={{ width: "100%" }}>
               <span style={{ color: "blue" }}>*ជ្រើសរើសអតិថិជន</span>
               <Select
                 value={findLabel()}
@@ -128,7 +128,7 @@ const CategoryModal = ({
                 options={customers}
               />
             </label>
-            <label>
+            <label style={{ width: "100%" }}>
               <span style={{ color: "blue" }}>*ជ្រើសរើសការបង់ប្រាក់ </span>
 
               <Select
@@ -149,7 +149,7 @@ const CategoryModal = ({
                 options={paymentType}
               />
             </label>
-            <label>
+            <label style={{ width: "100%" }}>
               <span style={{ color: "blue" }}>*ការកក់ប្រាក់គិតជា$</span>
               <NumericInput
                 value={form.deposit}
@@ -159,7 +159,7 @@ const CategoryModal = ({
                 placeholder="ប្រាក់កក់"
               />
             </label>
-            <label>
+            <label style={{ width: "100%" }}>
               <span style={{ color: "blue" }}>*ការពិពណ៌នា </span>
               <Input.TextArea
                 value={form.description}

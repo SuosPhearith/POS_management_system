@@ -377,7 +377,7 @@ const SalePage = () => {
         payment_type_id: items.payment_type_id,
         saleType: items.saleType,
         debt: items.debt,
-        deposit: items.deposit,
+        deposit: items.deposit * 1,
         description: items.description,
         products: saleItems,
       };
@@ -435,7 +435,7 @@ const SalePage = () => {
       message.error("សូមបញ្ចូលប្រភេទលក់!");
       return true;
     }
-    if (items.deposit > totalDollar) {
+    if (items.deposit * 1 > totalDollar * 1) {
       message.error("សូមបញ្ចូលប្រាក់កក់អោយបាបត្រឹមត្រូវ!");
       return true;
     }

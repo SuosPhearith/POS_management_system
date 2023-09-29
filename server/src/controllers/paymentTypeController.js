@@ -1,6 +1,5 @@
 const db = require("../config/db");
 const executeQuery = db.executeQuery;
-const currentDate = require("../utils/currentDate");
 const asyncHandler = require("express-async-handler");
 
 const getList = asyncHandler(async (req, res, next) => {
