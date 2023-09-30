@@ -150,3 +150,23 @@
     justify-content: flex-start;
     align-items: center;
 }
+
+.sub_layout_link{
+    margin-top: 16px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-family: 'Khmer OS Content', sans-serif;
+    font-size: 15px;
+}
+
+
+.child_sub_layout_link{
+    width: 100px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #344458;
+    color: white;
+    border-radius: 3px;
+}

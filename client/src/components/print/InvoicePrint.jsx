@@ -3,8 +3,17 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./InvoicePrint.css";
 import DateConverter from "../../utils/DateConverter";
 import { adminLayoutContext } from "../../layouts/admin/AdminLayout";
+import { managerLayoutContext } from "../../layouts/manager/ManagerLayout";
+import { salerLayoutContext } from "../../layouts/saler/SalerLayout";
 const Invoice = ({ handlePrintInvoice, handleCancelPrint }) => {
-  const { print } = useContext(adminLayoutContext);
+  const userRole = localStorage.getItem("role");
+  const contextToUse =
+    userRole === "admin"
+      ? adminLayoutContext
+      : userRole === "manager"
+      ? managerLayoutContext
+      : salerLayoutContext;
+  const { print, setPrint } = useContext(contextToUse);
   const [dataForPrint, setDataForPrint] = useState([]);
   useEffect(() => {
     const dataString = localStorage.getItem("dataForPrint");

@@ -39,25 +39,6 @@ function MainRoute() {
               <Route path="/rate" element={<RatePage />} />
               <Route path="/invoice" element={<InvoicePage />} />
               <Route path="/customer" element={<CustomerPage />} />
-
-              {/* <Route path="/invoice" element={<InvoiceLayout />}>
-                <Route index={true} element={<InvoicePage />} />
-                <Route
-                  index={false}
-                  path="debt"
-                  element={<InvoiceDebtPage />}
-                />
-                <Route
-                  index={false}
-                  path="debtLate"
-                  element={<InvoiceDebtLatePage />}
-                />
-                <Route
-                  index={false}
-                  path="payall"
-                  element={<InvoicePayAllPage />}
-                />
-              </Route> */}
               <Route path="/supplier" element={<SupplierPage />} />
               <Route path="/receiveProduct" element={<ReceiveProductPage />} />
             </Route>
@@ -71,24 +52,32 @@ function MainRoute() {
             <Route element={<PrivateRoutes />}>
               <Route path="/" element={<DashboardPage />} exact />
               <Route path="/sale" element={<SalePage />} />
+              <Route path="/productSale" element={<ProductSalePage />} />
+              <Route path="/specialSale" element={<SpecialSalePage />} />
               <Route path="/product" element={<ProductPage />} />
+              <Route path="/category" element={<CategoryPage />} />
               <Route path="/report" element={<ReportPage />} />
               <Route path="/rate" element={<RatePage />} />
               <Route path="/invoice" element={<InvoicePage />} />
+              <Route path="/customer" element={<CustomerPage />} />
+              <Route path="/supplier" element={<SupplierPage />} />
+              <Route path="/receiveProduct" element={<ReceiveProductPage />} />
             </Route>
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </ManagerLayout>
       )}
-      {token && role === "saler" && (
+      {token && role === "seller" && (
         <SalerLayout>
           <Routes>
             <Route element={<PrivateRoutes />}>
-              <Route path="/sale" element={<SalePage />} />
-              <Route path="/rate" element={<RatePage />} />
+              <Route path="/" element={<SalePage />} exact />
+              <Route path="/productSale" element={<ProductSalePage />} />
+              <Route path="/specialSale" element={<SpecialSalePage />} />
               <Route path="/invoice" element={<InvoicePage />} />
+              <Route path="/customer" element={<CustomerPage />} />
             </Route>
-            <Route path="*" element={<Navigate to="/sale" />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </SalerLayout>
       )}

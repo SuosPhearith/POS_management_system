@@ -21,25 +21,8 @@
 }
 .create{
     margin-right: 30px;
-    width: 800px;
-    height: 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 .btn{
     font-family: 'Khmer OS', sans-serif;
     font-size: 16px;
-    cursor: pointer;
-    padding: 6px;
-    background-color:#2E4374;
-    color: white;
-    border-radius: 6px;
-    border: 2px solid #2E4374;
-}
-.btn:hover{
-    background: none;
-    color: rgb(0, 0, 0);
-    border-radius: 6px;
-    border: 2px solid #2E4374;
 }

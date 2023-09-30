@@ -10,7 +10,7 @@ const getList = asyncHandler(async (req, res, next) => {
     const currentPage = req.query.page >= 1 ? req.query.page : 1;
     const offset = (currentPage - 1) * pagination;
     let querySearch = "";
-    let getListinvoices = "select * from customers";
+    let getListinvoices = "select * from customers order by id desc";
     if (search !== "" || currentPage !== 1) {
       querySearch = `where id = '${search}' or name LIKE '%${search}%'`;
       getListinvoices =

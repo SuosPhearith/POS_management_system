@@ -9,11 +9,20 @@ import InvoiceDetailModal from "../../components/invoice/InvoiceDetailModal";
 import style from "./InvoicePage.module.css";
 import Search from "../../components/search/Search";
 import { adminLayoutContext } from "../../layouts/admin/AdminLayout";
+import { managerLayoutContext } from "../../layouts/manager/ManagerLayout";
+import { salerLayoutContext } from "../../layouts/saler/SalerLayout";
 import InvoicePrint from "../../components/print/InvoicePrint";
 const InvoicePage = () => {
+  const userRole = localStorage.getItem("role");
+  const contextToUse =
+    userRole === "admin"
+      ? adminLayoutContext
+      : userRole === "manager"
+      ? managerLayoutContext
+      : salerLayoutContext;
+  const { print, setPrint } = useContext(contextToUse);
   const [page, setPage] = useState(0);
   const [totalInvoice, setTotalInvoice] = useState(0);
-  const { print, setPrint } = useContext(adminLayoutContext);
   const [invoiceType, setInvoiceType] = useState("all");
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(false);

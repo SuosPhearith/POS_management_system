@@ -12,10 +12,19 @@ import InputNumberFloat from "../../components/usefull/NumbericInputFloat";
 import InvoicePrint from "../../components/print/InvoicePrint";
 import { Button, Input, Select, Spin, Radio, message, Checkbox } from "antd";
 import { adminLayoutContext } from "../../layouts/admin/AdminLayout";
+import { managerLayoutContext } from "../../layouts/manager/ManagerLayout";
+import { salerLayoutContext } from "../../layouts/saler/SalerLayout";
 import "./SalePage.css";
 const SalePage = () => {
   // globle
-  const { print, setPrint } = useContext(adminLayoutContext);
+  const userRole = localStorage.getItem("role");
+  const contextToUse =
+    userRole === "admin"
+      ? adminLayoutContext
+      : userRole === "manager"
+      ? managerLayoutContext
+      : salerLayoutContext;
+  const { print, setPrint } = useContext(contextToUse);
   const inputNumberRef = useRef();
   const [categories, setCategories] = useState([]);
   const [customerId, setCustomerId] = useState(3);
