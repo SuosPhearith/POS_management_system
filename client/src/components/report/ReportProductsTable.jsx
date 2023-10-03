@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Space, Table } from "antd";
+import { Table } from "antd";
 
 const ReportInvoiveDebtTable = ({ products }) => {
   const columns = [

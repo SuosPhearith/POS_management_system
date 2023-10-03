@@ -5,7 +5,6 @@ import { BsChevronRight } from "react-icons/bs";
 import { BsCartCheckFill } from "react-icons/bs";
 import { BsFillBoxFill } from "react-icons/bs";
 import { MdDashboard } from "react-icons/md";
-import { FaUserEdit } from "react-icons/fa";
 import { IoReceipt } from "react-icons/io5";
 import { FaUserTie } from "react-icons/fa";
 import { BsFillClipboardDataFill } from "react-icons/bs";

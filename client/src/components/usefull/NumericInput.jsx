@@ -1,12 +1,12 @@
-import React from 'react';
-import { Input } from 'antd';
+import React from "react";
+import { Input } from "antd";
 
 function NumericInput(props) {
   // Custom function to handle numeric input
   const handleNumericInput = (e) => {
     const { value } = e.target;
     // Use a regular expression to remove any non-numeric characters
-    const numericValue = value.replace(/\D/g, '');
+    const numericValue = value.replace(/\D/g, "");
     // Update the input value with the cleaned numeric value
     e.target.value = numericValue;
     // Pass the modified event to the parent component's onChange handler

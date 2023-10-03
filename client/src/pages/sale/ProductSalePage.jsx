@@ -7,13 +7,22 @@ import SaleTable from "../../components/sale/SaleTable";
 import ListProduct from "../../components/sale/ListProduct";
 import ListCategory from "../../components/sale/ListCategory";
 import CreaeteCustomerModal from "../../components/sale/CreaeteCustomerModal";
-import InputNumber from "../../components/usefull/NumericInput";
 import InputNumberFloat from "../../components/usefull/NumbericInputFloat";
 import InvoicePrint from "../../components/print/InvoicePrint";
-import { Button, Input, Select, Spin, Radio, message, Checkbox } from "antd";
+import {
+  Button,
+  Input,
+  Select,
+  Spin,
+  Radio,
+  message,
+  Checkbox,
+  Space,
+} from "antd";
 import { adminLayoutContext } from "../../layouts/admin/AdminLayout";
 import { managerLayoutContext } from "../../layouts/manager/ManagerLayout";
 import { salerLayoutContext } from "../../layouts/saler/SalerLayout";
+
 import "./SalePage.css";
 const SalePage = () => {
   // globle
@@ -26,6 +35,7 @@ const SalePage = () => {
       : salerLayoutContext;
   const { print, setPrint } = useContext(contextToUse);
   const inputNumberRef = useRef();
+  const inputQuantityRef = useRef();
   const [categories, setCategories] = useState([]);
   const [customerId, setCustomerId] = useState(3);
   const [loading, setLoading] = useState(false);
@@ -69,17 +79,47 @@ const SalePage = () => {
     const ProductId = String(product.id);
     const description = String(product.description);
     const catName = String(product.category_name);
+    const unit_code = String(product.unit_code);
     return (
       name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       catName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      ProductId.toLowerCase().includes(searchQuery.toLowerCase())
+      ProductId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      unit_code.toLowerCase().includes(searchQuery.toLowerCase())
     );
   });
+
   // Handle search by category
   const handleSearchByCategory = (name) => {
     setSearchQuery(name);
   };
+  console.log(products);
+  // Scan barcode
+  const [scanText, setScanText] = useState("");
+  const filteredScan = products.filter((product) => {
+    const unit_code = String(product.box_code);
+    return unit_code.toLowerCase() === scanText.toLowerCase();
+  });
+
+  useEffect(() => {
+    if (filteredScan.length === 1) {
+      setItem({
+        product_id: filteredScan[0].id,
+        unit_code: filteredScan[0].box_code,
+        name: filteredScan[0].name,
+        cashType: filteredScan[0].cashType,
+        quantity: 1,
+        price: filteredScan[0].product_price,
+        description: filteredScan[0].description,
+      });
+      inputQuantityRef?.current?.focus();
+      // inputNumberRef?.current?.focus();
+      setScanText("");
+    }
+    // eslint-disable-next-line
+  }, [scanText]);
+
+  // end Scan
 
   useEffect(() => {
     inputNumberRef?.current?.focus();
@@ -238,6 +278,7 @@ const SalePage = () => {
   const getProduct = (
     product_id,
     unit_code,
+    box_code,
     name,
     cashType,
     unit_price,
@@ -245,14 +286,14 @@ const SalePage = () => {
     special_price,
     description
   ) => {
-    inputNumberRef.current.focus();
+    inputQuantityRef.current.focus();
     if (item.name !== name) {
       setItem({ ...item, quantity: 0 });
     }
     setItem((prevItem) => ({
       ...prevItem,
       product_id: product_id,
-      unit_code: unit_code,
+      unit_code: box_code,
       name: name,
       cashType: cashType,
       quantity: prevItem.quantity + 1,
@@ -272,7 +313,7 @@ const SalePage = () => {
   };
   const selectStyle = {
     fontSize: "15px",
-    width: "250px",
+    width: "150px",
   };
 
   const radioStyle = {
@@ -321,7 +362,7 @@ const SalePage = () => {
 
       let totalKhmer = totalRiel + totalDollar * exchangeRate;
       let totalUsa = totalDollar + totalRiel / exchangeRate;
-      const roundedNumber = totalUsa.toFixed(2);
+      let roundedNumber = totalUsa.toFixed(2);
       setTotalDollar(roundedNumber);
       setTotalRiel(totalKhmer);
     };
@@ -376,6 +417,8 @@ const SalePage = () => {
   // end of add items
 
   // creaate invoice
+  console.log(typeof totalDollar);
+  console.log(typeof items.deposit);
   const handleCreateInvoice = async () => {
     if (validateCreateInvoice()) return;
     try {
@@ -451,6 +494,11 @@ const SalePage = () => {
     return false;
   };
   // end of create invoice
+  const handleEditQuantity = (e) => {
+    const { value } = e.target;
+    const numericValue = value.replace(/\D/g, "");
+    setItem({ ...item, quantity: numericValue });
+  };
   return (
     <>
       <Spin spinning={loading}>
@@ -474,7 +522,7 @@ const SalePage = () => {
                 <div className={style.customer}>
                   <div className={style.customerName}>
                     <div>ឈ្មោះអតិថិជន:</div>
-                    <div>
+                    <Space>
                       <Select
                         value={findLabel()}
                         onChange={handleSelectChangeCustomer}
@@ -492,7 +540,15 @@ const SalePage = () => {
                         }
                         options={customers}
                       />
-                    </div>
+
+                      <Input
+                        value={scanText}
+                        onChange={(e) => setScanText(e.target.value)}
+                        ref={inputNumberRef}
+                        onPressEnter={handleKeyPress}
+                        placeholder="ស្កែនបាកូដ"
+                      />
+                    </Space>
                   </div>
                   <div className={style.newCustomer}>
                     <Button
@@ -508,7 +564,6 @@ const SalePage = () => {
                     <div className={style.detailContailer}>
                       <div className={style.inforProduct}>បាកូដទំនិញ:</div>
                       <Input
-                        ref={inputNumberRef}
                         value={item.unit_code}
                         className={style.inputAnt}
                         placeholder="បាកូដទំនិញ"
@@ -537,11 +592,11 @@ const SalePage = () => {
                     </div>
                     <div className={style.detailContailer}>
                       <div className={style.inforProduct}>ចំនួនទិញ:</div>
-                      <InputNumber
+                      <Input
+                        type="number"
+                        ref={inputQuantityRef}
                         value={item.quantity}
-                        onChange={(e) =>
-                          setItem({ ...item, quantity: e.target.value })
-                        }
+                        onChange={(e) => handleEditQuantity(e)}
                         className={style.inputAnt}
                         placeholder="ចំនួនទិញ"
                         onPressEnter={handleKeyPress}
@@ -629,7 +684,7 @@ const SalePage = () => {
                         រក្សាទុក
                       </Button>
                       <Button onClick={() => handleOpenPrint()} type="primary">
-                        Print invoice
+                        Print receipt
                       </Button>
                       <Button
                         onClick={() => handleCancelForm()}

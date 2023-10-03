@@ -13,7 +13,7 @@ const Invoice = ({ handlePrintInvoice, handleCancelPrint }) => {
       : userRole === "manager"
       ? managerLayoutContext
       : salerLayoutContext;
-  const { print, setPrint } = useContext(contextToUse);
+  const { print } = useContext(contextToUse);
   const [dataForPrint, setDataForPrint] = useState([]);
   useEffect(() => {
     const dataString = localStorage.getItem("dataForPrint");

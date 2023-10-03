@@ -122,13 +122,13 @@
     border-bottom: 1px solid #738987;
 }
 .customerName{
-    width: 70%;
+    width: 75%;
     display: flex;
     justify-content: space-around;
     align-items: center;
 }
 .newCustomer{
-    width: 30%;
+    width: 25%;
     display: flex;
     justify-content: center;
     align-items: center;

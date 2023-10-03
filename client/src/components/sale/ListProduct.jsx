@@ -12,6 +12,7 @@ const ListProduct = ({ products, getProduct }) => {
                 getProduct(
                   product.id,
                   product.unit_code,
+                  product.box_code,
                   product.name,
                   product.cashType,
                   product.unit_price,
