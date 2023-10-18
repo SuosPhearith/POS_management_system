@@ -93,7 +93,6 @@ const SalePage = () => {
   const handleSearchByCategory = (name) => {
     setSearchQuery(name);
   };
-  console.log(products);
   // Scan barcode
   const [scanText, setScanText] = useState("");
   const filteredScan = products.filter((product) => {
@@ -417,8 +416,6 @@ const SalePage = () => {
   // end of add items
 
   // creaate invoice
-  console.log(typeof totalDollar);
-  console.log(typeof items.deposit);
   const handleCreateInvoice = async () => {
     if (validateCreateInvoice()) return;
     try {

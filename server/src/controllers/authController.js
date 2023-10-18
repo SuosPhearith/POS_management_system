@@ -20,7 +20,7 @@ const login = asyncHandler(async (req, res, next) => {
     const checkOnlyOne = await executeQuery(queryOnlyOne, [username]);
     if (checkOnlyOne.length > 0) {
       res.status(400);
-      throw new Error("Accuont can loggin only once device!");
+      throw new Error("Accuont can loggin only one device!");
     }
     const isCorrect = await bcrypt.compare(password, user[0].password);
     if (!isCorrect) {
@@ -36,10 +36,52 @@ const login = asyncHandler(async (req, res, next) => {
       expiresIn: "15m",
     });
     const refresh_token = jwt.sign(user[0], process.env.JWT_REFRESH_KEY);
-
     res.json({
       access_token: access_token,
       refresh_token: refresh_token,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+const reset = asyncHandler(async (req, res, next) => {
+  try {
+    const { username, password, adminPassword } = req.body;
+    if (!username || !password || !adminPassword) {
+      res.json({
+        error: true,
+        message: "Please input all fields",
+      });
+    }
+    const querycheck = "select * from users where username = ?";
+    // const querycheck = "select * from users where username = " + username;
+    const user = await executeQuery(querycheck, [username]);
+    if (user.length === 0) {
+      res.status(400);
+      throw new Error("Username does not exist!");
+    }
+    const isCorrect = await bcrypt.compare(password, user[0].password);
+    if (!isCorrect) {
+      res.status(400);
+      throw new Error("Incorrect password!");
+    }
+
+    const checkAdmin = "select * from users where id = 1";
+    const adminPass = await executeQuery(checkAdmin);
+    const isCorrectAdmin = await bcrypt.compare(
+      adminPassword,
+      adminPass[0].password
+    );
+    if (!isCorrectAdmin) {
+      res.status(400);
+      throw new Error("Incorrect admin password!");
+    }
+
+    const queryActive = "update users set is_active = 0 where username = ?";
+    await executeQuery(queryActive, [username]);
+    res.json({
+      message: "reset successfully",
     });
   } catch (error) {
     next(error);
@@ -120,4 +162,5 @@ module.exports = {
   login,
   logout,
   refresh,
+  reset,
 };

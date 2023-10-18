@@ -60,7 +60,6 @@ const ReportPage = () => {
         "GET",
         `report/getListReportDataDateToDate?startDate=${startDate}&endDate=${endDate}`
       );
-      console.log(response);
       setDataByDate({
         total_invoice: response.total_invoice[0].total_invoice,
         total_sale_money: response.total_sale_money[0].total_sale_money,

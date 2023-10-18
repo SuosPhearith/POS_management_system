@@ -28,3 +28,13 @@
 .btn{
     width: 100px;
 }
+.reset{
+    color: blue;
+    cursor: pointer;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.reset:hover{
+    color: rgb(255, 0, 0);
+    cursor: pointer;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}

@@ -1,7 +1,7 @@
-import React from 'react';
-import style from './LoginForm.module.css';
-import { Button, Form, Input } from 'antd';
-const LoginForm = ({ handleLogin }) => {
+import React from "react";
+import style from "./LoginForm.module.css";
+import { Button, Form, Input } from "antd";
+const LoginForm = ({ handleLogin, setIsOpenForm }) => {
   return (
     <div className={style.container}>
       <div className={style.login}>ចូលគណនី</div>
@@ -28,7 +28,7 @@ const LoginForm = ({ handleLogin }) => {
           rules={[
             {
               required: true,
-              message: 'សូមបញ្ចូលឈ្មោះគណនី​​!',
+              message: "សូមបញ្ចូលឈ្មោះគណនី​​!",
             },
           ]}
         >
@@ -41,22 +41,23 @@ const LoginForm = ({ handleLogin }) => {
           rules={[
             {
               required: true,
-              message: 'សូមបញ្ចូលលេខសម្ងាត់​​!',
+              message: "សូមបញ្ចូលលេខសម្ងាត់​​!",
             },
           ]}
         >
           <Input.Password />
         </Form.Item>
-        <Form.Item
-          className={style.loginBtn}
-        >
+        <Form.Item className={style.loginBtn}>
           <Button type="primary" htmlType="submit" className={style.btn}>
             ចូល
           </Button>
         </Form.Item>
       </Form>
+      <div onClick={() => setIsOpenForm(true)} className={style.reset}>
+        Reset
+      </div>
     </div>
   );
-}
+};
 
 export default LoginForm;
