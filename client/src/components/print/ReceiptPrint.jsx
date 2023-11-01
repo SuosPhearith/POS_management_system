@@ -147,8 +147,14 @@ const Invoice = ({ handlePrintInvoice, handleCancelPrint }) => {
                             </th>
                             <td className="total-price">{item.product_name}</td>
                             <td className="total-price">{item.quantity}</td>
-                            <td className="total-price">{item.unit_price}</td>
-                            <td className="total-price">{item.sub_total}</td>
+                            <td className="total-price">
+                              {item.unit_price}
+                              {item.cashType === "riel" ? "៛" : "$"}
+                            </td>
+                            <td className="total-price">
+                              {item.sub_total}
+                              {item.cashType === "riel" ? "៛" : "$"}
+                            </td>
                           </tr>
                         );
                       })}

@@ -47,7 +47,7 @@ const SalePage = () => {
     user_id: localStorage.getItem("id"),
     customer_id: customerId,
     payment_type_id: "1",
-    saleType: "specail",
+    saleType: "product",
     debt: false,
     deposit: 0,
     description: "",
@@ -79,7 +79,7 @@ const SalePage = () => {
     const ProductId = String(product.id);
     const description = String(product.description);
     const catName = String(product.category_name);
-    const unit_code = String(product.box_code);
+    const unit_code = String(product.unit_code);
     return (
       name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       description.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -99,8 +99,7 @@ const SalePage = () => {
     const unit_code = String(product.box_code);
     return unit_code.toLowerCase() === scanText.toLowerCase();
   });
-
-  useEffect(() => {
+  const handleScan = () => {
     if (filteredScan.length === 1) {
       setItem({
         product_id: filteredScan[0].id,
@@ -112,13 +111,16 @@ const SalePage = () => {
         description: filteredScan[0].description,
       });
       inputQuantityRef?.current?.focus();
-      // inputNumberRef?.current?.focus();
       setScanText("");
     }
-    // eslint-disable-next-line
-  }, [scanText]);
+  };
 
-  // end Scan
+  useEffect(() => {
+    if (item && item.product_id) {
+      inputQuantityRef.current.select();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item.product_id]);
 
   useEffect(() => {
     inputNumberRef?.current?.focus();
@@ -127,6 +129,11 @@ const SalePage = () => {
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleAddItems();
+    }
+  };
+  const handleKeyPressScanner = (e) => {
+    if (e.key === "Enter") {
+      handleScan();
     }
   };
   const totalRielTrimmed = () => {
@@ -388,11 +395,12 @@ const SalePage = () => {
 
   // check product is already added
   const validateAddItems = () => {
+    console.log(item);
     if (item.cashType !== "riel" && item.cashType !== "dollar") {
       message.error("ទំនិញមានបញ្ហា!");
       return true;
     }
-    if (item.quantity === "" || item.quantity <= 0) {
+    if (item.quantity === "" || item.quantity <= 0 || item.quantity > 100000) {
       message.error("សូមបញ្ជាក់ការបញ្ចូល!");
       return true;
     }
@@ -508,7 +516,7 @@ const SalePage = () => {
           <main className={style.main}>
             <div className={style.header}>
               <div className={style.information}>
-                <h3>POS / លក់​ពិសេស</h3>
+                <h3>POS / លក់ពិសេស</h3>
               </div>
               <div className={style.search}>
                 <Search searchQuery={searchQuery} handleSearch={handleSearch} />
@@ -542,7 +550,7 @@ const SalePage = () => {
                         value={scanText}
                         onChange={(e) => setScanText(e.target.value)}
                         ref={inputNumberRef}
-                        onPressEnter={handleKeyPress}
+                        onPressEnter={handleKeyPressScanner}
                         placeholder="ស្កែនបាកូដ"
                       />
                     </Space>

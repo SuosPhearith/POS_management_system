@@ -138,6 +138,8 @@ const create = asyncHandler(async (req, res, next) => {
       description,
     } = req.body;
 
+    // console.log(products);
+
     if (!Array.isArray(products) || products.length === 0) {
       res.status(400);
       throw new Error("Please input product");
@@ -289,10 +291,11 @@ const create = asyncHandler(async (req, res, next) => {
     }
     // Insert into sales
     const querySale =
-      "insert into sales (invoice_id, product_id, quantity, unit_price, sub_total) values ?";
+      "insert into sales (invoice_id, product_id, cashType, quantity, unit_price, sub_total) values ?";
     const querySaleValue = products.map((product) => [
       invoice_id,
       product.product_id,
+      product.cashType,
       product.quantity,
       product.price,
       product.price * product.quantity,
@@ -331,13 +334,14 @@ const create = asyncHandler(async (req, res, next) => {
     await connection.commit();
     // invoice id, customer_name, customer_contact, customer_address, created_date, status, products, total_khmer-price, total_usd_price, deposit, debt
     const queryCreateInvoice =
-      "select s.invoice_id, s.product_id, s.quantity, s.unit_price, s.sub_total, c.name as customer_name, c.contact, c.address, p.name as product_name, i.id as invoice_id, i.description, i.total_amount_USD, i.total_amount_khmer, i.debt, i.deposit, i.created_date, u.fullname  from invoices as i join sales as s on i.id = s.invoice_id join customers as c on i.customer_id = c.id join users as u on i.user_id = u.id join products as p on s.product_id = p.id where s.invoice_id = ?";
+      "select s.invoice_id, s.product_id, s.quantity, s.cashType, s.unit_price, s.sub_total, c.name as customer_name, c.contact, c.address, p.name as product_name, i.id as invoice_id, i.description, i.total_amount_USD, i.total_amount_khmer, i.debt, i.deposit, i.created_date, u.fullname  from invoices as i join sales as s on i.id = s.invoice_id join customers as c on i.customer_id = c.id join users as u on i.user_id = u.id join products as p on s.product_id = p.id where s.invoice_id = ?";
     const createInvoice = await executeQuery(queryCreateInvoice, [invoice_id]);
     if (Array.isArray(createInvoice)) {
       createInvoice.forEach((invoice) => {
         delete invoice.password;
       });
     }
+    // console.log(createInvoice);
     res.status(201).json({
       message: "Sale successfully!",
       Invoice: createInvoice,

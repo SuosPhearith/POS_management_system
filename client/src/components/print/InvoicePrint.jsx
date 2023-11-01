@@ -36,6 +36,7 @@ const Invoice = ({ handlePrintInvoice, handleCancelPrint }) => {
 
     return roundedNumber;
   };
+  console.log(dataForPrint);
   return (
     <div className="card">
       <div className="card-body">
@@ -159,8 +160,14 @@ const Invoice = ({ handlePrintInvoice, handleCancelPrint }) => {
                             <th scope="row">{index + 1}</th>
                             <td className="total-price">{item.product_name}</td>
                             <td className="total-price">{item.quantity}</td>
-                            <td className="total-price">{item.unit_price}</td>
-                            <td className="total-price">{item.sub_total}</td>
+                            <td className="total-price">
+                              {item.unit_price}
+                              {item.cashType === "riel" ? "៛" : "$"}
+                            </td>
+                            <td className="total-price">
+                              {item.sub_total}
+                              {item.cashType === "riel" ? "៛" : "$"}
+                            </td>
                           </tr>
                         );
                       })}
